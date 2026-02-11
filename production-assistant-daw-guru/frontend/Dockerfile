@@ -7,10 +7,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY ./package.json ./package-lock.json ./
+COPY production-assistant-daw-guru/frontend/package.json production-assistant-daw-guru/frontend/package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY production-assistant-daw-guru/frontend .
 
 RUN npm run build
 
