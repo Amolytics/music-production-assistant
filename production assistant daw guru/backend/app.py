@@ -1,5 +1,5 @@
 # --- Real-time collaboration chat and file sharing ---
-from fastapi import WebSocket
+from fastapi import WebSocket, Request
 from typing import List
 
 chat_messages = []  # In-memory store for demo; use DB in production
@@ -42,8 +42,6 @@ user_daw_version = None
 ai = AIMusicModel()
 daw_adapter = None
 
-@app.post("/setup")
-from fastapi import Request
 @app.post("/setup")
 async def setup(request: Request):
     global user_daw, user_daw_version, daw_adapter, api_key
