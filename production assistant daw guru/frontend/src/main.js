@@ -1,9 +1,6 @@
 // Main entry for frontend
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-function App() {
-  return <h1>Music Production Assistant</h1>;
-}
+import App from './App';
 
 ReactDOM.render(<App />, document.getElementById('root'));
