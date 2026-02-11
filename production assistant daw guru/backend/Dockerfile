@@ -8,10 +8,8 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 
-# Copy backend code
+# Copy backend code and ai_services
 COPY . .
-# Copy ai_services from parent directory
-COPY ../ai_services ./ai_services
 
 # Expose FastAPI default port
 EXPOSE 8000
