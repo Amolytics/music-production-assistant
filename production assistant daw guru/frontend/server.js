@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   res.locals.nonce = nonce;
   res.setHeader(
     'Content-Security-Policy',
-    `script-src 'self' https://js.stripe.com blob: 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}'; object-src 'none'; base-uri 'self';`
+    `script-src 'self' https://js.stripe.com blob: 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' https://m.stripe.network; object-src 'none'; base-uri 'self';`
   );
   next();
 });
