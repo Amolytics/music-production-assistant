@@ -1,15 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const dropZoneStyle = {
-  border: '2px dashed #ffb400',
-  borderRadius: '12px',
-  padding: '1em',
-  textAlign: 'center',
-  background: 'rgba(35,35,35,0.85)',
-  color: '#ffb400',
-  marginBottom: '1em',
-  cursor: 'pointer',
-};
+// ...existing code...
 
 function DragDropFileUpload({ onUpload }) {
   const [dragActive, setDragActive] = useState(false);
@@ -42,7 +33,7 @@ function DragDropFileUpload({ onUpload }) {
 
   return (
     <div
-      style={{ ...dropZoneStyle, borderColor: dragActive ? '#fff' : '#ffb400' }}
+      className={`dropzone${dragActive ? ' active' : ''}`}
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
       onDragLeave={handleDrag}
@@ -53,7 +44,7 @@ function DragDropFileUpload({ onUpload }) {
       <input
         ref={inputRef}
         type="file"
-        style={{ display: 'none' }}
+        className="dropzone-input"
         onChange={handleChange}
       />
     </div>

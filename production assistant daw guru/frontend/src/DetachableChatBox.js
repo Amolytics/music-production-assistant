@@ -2,40 +2,7 @@ import React, { useState } from 'react';
 // WebSocket for real-time chat
 import DragDropFileUpload from './DragDropFileUpload';
 
-const chatBoxStyle = {
-  position: 'fixed',
-  bottom: '2em',
-  right: '2em',
-  width: '320px',
-  background: 'rgba(35,35,35,0.95)',
-  borderRadius: '16px',
-  boxShadow: '0 4px 24px #0008',
-  color: '#fff',
-  zIndex: 1000,
-  padding: '1em',
-  fontFamily: 'Montserrat, Arial, sans-serif',
-};
-
-const headerStyle = {
-  cursor: 'move',
-  background: '#232323',
-  borderRadius: '16px 16px 0 0',
-  padding: '0.5em',
-  fontWeight: 700,
-  color: '#ffb400',
-  textAlign: 'center',
-};
-
-const closeBtnStyle = {
-  position: 'absolute',
-  top: '0.5em',
-  right: '0.5em',
-  background: 'none',
-  border: 'none',
-  color: '#ffb400',
-  fontSize: '1.2em',
-  cursor: 'pointer',
-};
+// ...existing code...
 
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -106,47 +73,45 @@ const closeBtnStyle = {
   };
 
   return (
-    <div style={{ ...chatBoxStyle, left: position.x || 'auto', top: position.y || 'auto' }}>
-      <div style={headerStyle} onMouseDown={handleMouseDown}>
+    <div className="chatbox" style={{ left: position.x || 'auto', top: position.y || 'auto' }}>
+      <div className="chatbox-header" onMouseDown={handleMouseDown}>
         AI Chat Assistant
-        <button style={closeBtnStyle} onClick={onClose}>&times;</button>
+        <button className="chatbox-close" onClick={onClose}>&times;</button>
       </div>
       {notification && (
-        <div style={{ background: '#ffb400', color: '#232323', borderRadius: '8px', padding: '0.5em', marginBottom: '1em', fontWeight: 700, textAlign: 'center' }}>
-          {notification}
-        </div>
+        <div className="chatbox-notification">{notification}</div>
       )}
       <DragDropFileUpload onUpload={handleFileUpload} />
-      <div style={{ maxHeight: '200px', overflowY: 'auto', margin: '1em 0' }}>
+      <div className="chatbox-messages">
         {messages.map((msg, idx) => (
-          <div key={idx} style={{ textAlign: msg.sender === 'AI' ? 'left' : 'right', marginBottom: '0.5em' }}>
-            <span style={{ color: msg.sender === 'AI' ? '#ffb400' : '#fff', fontWeight: 600 }}>{msg.sender}: </span>
+          <div key={idx} className={`chatbox-message ${msg.sender === 'AI' ? 'ai' : 'user'}`}>
+            <span className={`chatbox-sender ${msg.sender === 'AI' ? 'ai' : 'user'}`}>{msg.sender}: </span>
             <span>{msg.text}</span>
           </div>
         ))}
         {files.length > 0 && (
-          <div style={{ marginTop: '1em', color: '#ffb400' }}>
+          <div className="chatbox-files">
             <strong>Shared Files:</strong>
-            <ul style={{ paddingLeft: '1em' }}>
+            <ul>
               {files.map((file, idx) => (
                 <li key={idx}>
                   {file.type.startsWith('image/') ? (
-                    <img src={URL.createObjectURL(file)} alt={file.name} style={{ maxWidth: '120px', maxHeight: '80px', borderRadius: '8px', marginRight: '0.5em' }} />
+                    <img src={URL.createObjectURL(file)} alt={file.name} className="chatbox-file-image" />
                   ) : null}
                   {file.type.startsWith('audio/') ? (
-                    <audio controls style={{ maxWidth: '180px', verticalAlign: 'middle', marginRight: '0.5em' }}>
+                    <audio controls className="chatbox-file-audio">
                       <source src={URL.createObjectURL(file)} type={file.type} />
                       Your browser does not support the audio element.
                     </audio>
                   ) : null}
-                  <a href={URL.createObjectURL(file)} download={file.name} style={{ color: '#ffb400', textDecoration: 'underline' }}>{file.name}</a>
+                  <a href={URL.createObjectURL(file)} download={file.name} className="chatbox-file-link">{file.name}</a>
                 </li>
               ))}
             </ul>
           </div>
         )}
       </div>
-      <form onSubmit={e => {
+      <form className="chatbox-form" onSubmit={e => {
         e.preventDefault();
         setMessages([...messages, { sender: 'You', text: input }]);
         if (ws && ws.readyState === ws.OPEN) {
@@ -159,11 +124,9 @@ const closeBtnStyle = {
           value={input}
           onChange={e => setInput(e.target.value)}
           placeholder="Type your message..."
-          style={{ width: '100%', padding: '0.5em', borderRadius: '8px', border: '1px solid #444', marginBottom: '0.5em', background: '#333', color: '#fff' }}
+          className="chatbox-input"
         />
-        <button type="submit" style={{ width: '100%', padding: '0.5em', borderRadius: '8px', background: '#ffb400', color: '#232323', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-          Send
-        </button>
+        <button type="submit" className="chatbox-send">Send</button>
       </form>
     </div>
   );
