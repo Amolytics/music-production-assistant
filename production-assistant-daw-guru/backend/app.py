@@ -1,7 +1,3 @@
-# Add root route for health check and frontend requests
-@app.get("/")
-def read_root():
-    return {"status": "ok"}
 
 from fastapi import FastAPI, WebSocket, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +6,11 @@ from ai_services.models.music import AIMusicModel
 from daw_adapter import DAWAdapter
 
 app = FastAPI()
+
+# Add root route for health check and frontend requests
+@app.get("/")
+def read_root():
+    return {"status": "ok"}
 
 app.add_middleware(
     CORSMiddleware,
