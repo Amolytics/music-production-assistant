@@ -1,3 +1,187 @@
+/* App.js toggle chat button for CSP compliance */
+.toggle-chat-btn {
+  position: fixed;
+  bottom: 2em;
+  left: 2em;
+  z-index: 1100;
+  background: #ffb400;
+  color: #232323;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75em 1.5em;
+  font-weight: 700;
+  font-size: 1em;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+}
+/* VoiceTuningConsole styles for CSP compliance */
+.voice-tuning-console {
+  background: #232323;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0008;
+  padding: 2em;
+  margin-top: 2em;
+  color: #f0f0f0;
+  max-width: 420px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  border: 2px solid #444;
+}
+.voice-tuning-title {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1em;
+  color: #ffb400;
+  text-shadow: 0 2px 8px #0006;
+}
+.voice-tuning-section {
+  margin-bottom: 1.5em;
+}
+.voice-tuning-label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+.voice-tuning-range {
+  width: 100%;
+}
+.voice-tuning-value {
+  text-align: right;
+  color: #ffb400;
+  font-weight: 500;
+}
+.voice-tuning-select {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 8px;
+  background: #333;
+  color: #ffb400;
+  font-weight: 500;
+}
+.voice-tuning-button {
+  width: 100%;
+  padding: 0.75em;
+  border-radius: 8px;
+  background: #ffb400;
+  color: #232323;
+  font-weight: 700;
+  font-size: 1.1em;
+  border: none;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+  margin-top: 1em;
+}
+/* SettingsPage styles for CSP compliance */
+.settings-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #232323 60%, #444 100%);
+  color: #fff;
+}
+
+.settings-form {
+  background: rgba(35,35,35,0.92);
+  border-radius: 24px;
+  padding: 2em 2em;
+  box-shadow: 0 8px 32px #0008;
+  text-align: center;
+  min-width: 320px;
+}
+
+.settings-label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  color: #ffb400;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 0.75em;
+  border-radius: 8px;
+  border: 1px solid #444;
+  margin-bottom: 1em;
+  font-size: 1em;
+  background: #333;
+  color: #fff;
+}
+
+.settings-title {
+  color: #ffb400;
+  margin-bottom: 1em;
+}
+
+.settings-form button {
+  width: 100%;
+  padding: 1em;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #ffb400 60%, #ff6a00 100%);
+  color: #232323;
+  font-weight: 700;
+  font-size: 1.1em;
+  border: none;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+  margin-top: 1em;
+}
+/* LyricsGenerationPage styles for CSP compliance */
+.lyrics-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #232323 60%, #444 100%);
+  color: #fff;
+}
+
+.lyrics-form {
+  background: rgba(35,35,35,0.92);
+  border-radius: 24px;
+  padding: 2em 2em;
+  box-shadow: 0 8px 32px #0008;
+  text-align: center;
+  min-width: 320px;
+}
+
+.lyrics-label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  color: #ffb400;
+}
+
+.lyrics-input {
+  width: 100%;
+  padding: 0.75em;
+  border-radius: 8px;
+  border: 1px solid #444;
+  margin-bottom: 1em;
+  font-size: 1em;
+  background: #333;
+  color: #fff;
+}
+
+.lyrics-title {
+  color: #ffb400;
+  margin-bottom: 1em;
+}
+
+.lyrics-button {
+  width: 100%;
+  padding: 1em;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #ffb400 60%, #ff6a00 100%);
+  color: #232323;
+  font-weight: 700;
+  font-size: 1.1em;
+  border: none;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+  margin-top: 1em;
+}
 /* Main Studio Interface Styles */
 
 .main-studio {

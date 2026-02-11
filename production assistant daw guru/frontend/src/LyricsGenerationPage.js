@@ -1,55 +1,6 @@
 import React, { useState } from 'react';
 
-const pageStyle = {
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: 'linear-gradient(135deg, #232323 60%, #444 100%)',
-  color: '#fff',
-};
 
-const formStyle = {
-  background: 'rgba(35,35,35,0.92)',
-  borderRadius: '24px',
-  padding: '2em 2em',
-  boxShadow: '0 8px 32px #0008',
-  textAlign: 'center',
-  minWidth: '320px',
-};
-
-const labelStyle = {
-  display: 'block',
-  marginBottom: '0.5em',
-  fontWeight: 600,
-  color: '#ffb400',
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.75em',
-  borderRadius: '8px',
-  border: '1px solid #444',
-  marginBottom: '1em',
-  fontSize: '1em',
-  background: '#333',
-  color: '#fff',
-};
-
-const buttonStyle = {
-  width: '100%',
-  padding: '1em',
-  borderRadius: '12px',
-  background: 'linear-gradient(90deg, #ffb400 60%, #ff6a00 100%)',
-  color: '#232323',
-  fontWeight: 700,
-  fontSize: '1.1em',
-  border: 'none',
-  boxShadow: '0 2px 8px #0004',
-  cursor: 'pointer',
-  marginTop: '1em',
-};
 
 function LyricsGenerationPage({ onGenerate }) {
 
@@ -88,34 +39,34 @@ function LyricsGenerationPage({ onGenerate }) {
   };
 
   return (
-    <div style={pageStyle}>
-      <form style={formStyle} onSubmit={handleSubmit}>
-        <h2 style={{ color: '#ffb400', marginBottom: '1em' }}>Generate Lyrics</h2>
-        <div style={{ marginBottom: '1em' }}>
-          <button type="button" style={{ ...buttonStyle, width: '48%', marginRight: '2%' }}
-            onClick={() => setOutputType('lyrics')}
-            className={outputType === 'lyrics' ? 'active' : ''}>
-            Lyrics Only
-          </button>
-          <button type="button" style={{ ...buttonStyle, width: '48%' }}
-            onClick={() => setOutputType('voice')}
-            className={outputType === 'voice' ? 'active' : ''}>
-            Lyrics as Voice
-          </button>
-        </div>
-        <label style={labelStyle}>Music Style</label>
-        <select style={inputStyle} value={style} onChange={e => setStyle(e.target.value)}>
-          <option value="Pop">Pop</option>
-          <option value="Hip-Hop">Hip-Hop</option>
-          <option value="EDM">EDM</option>
-          <option value="Jazz">Jazz</option>
-          <option value="Rock">Rock</option>
-          <option value="Classical">Classical</option>
+    <div className="lyrics-page">
+      <form className="lyrics-form" onSubmit={handleSubmit}>
+        <h2 className="lyrics-title">Generate Lyrics or Voice</h2>
+        <label className="lyrics-label">Genre</label>
+        <input className="lyrics-input" type="text" value={genre} onChange={e => setGenre(e.target.value)} placeholder="Genre (e.g. Pop, Rock)" required />
+        <label className="lyrics-label">Style</label>
+        <input className="lyrics-input" type="text" value={style} onChange={e => setStyle(e.target.value)} placeholder="Style (e.g. Ballad, Rap)" required />
+        <label className="lyrics-label">Emotion</label>
+        <input className="lyrics-input" type="text" value={emotion} onChange={e => setEmotion(e.target.value)} placeholder="Emotion (e.g. Happy, Sad)" required />
+        <label className="lyrics-label">Language</label>
+        <input className="lyrics-input" type="text" value={language} onChange={e => setLanguage(e.target.value)} placeholder="Language (e.g. English)" required />
+        <label className="lyrics-label">Vocal Type</label>
+        <input className="lyrics-input" type="text" value={vocalType} onChange={e => setVocalType(e.target.value)} placeholder="Vocal Type (e.g. Male, Female)" required />
+        <label className="lyrics-label">Ethnicity</label>
+        <input className="lyrics-input" type="text" value={ethnicity} onChange={e => setEthnicity(e.target.value)} placeholder="Ethnicity (optional)" />
+        <label className="lyrics-label">Topic</label>
+        <input className="lyrics-input" type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Song topic or keywords" required />
+        <label className="lyrics-label">Output Type</label>
+        <select className="lyrics-input" value={outputType} onChange={e => setOutputType(e.target.value)}>
+          <option value="lyrics">Lyrics Only</option>
+          <option value="voice">Lyrics + Voice</option>
         </select>
-        <label style={labelStyle}>Emotion</label>
-        <select style={inputStyle} value={emotion} onChange={e => setEmotion(e.target.value)}>
-          <option value="Happy">Happy</option>
-          <option value="Sad">Sad</option>
+        <label className="lyrics-label">Upload Song File (optional)</label>
+        <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
+        <button className="lyrics-button" type="submit">Generate</button>
+      </form>
+    </div>
+  );
           <option value="Angry">Angry</option>
           <option value="Romantic">Romantic</option>
           <option value="Inspiring">Inspiring</option>

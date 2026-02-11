@@ -55,29 +55,13 @@ function SetupPage({ onComplete }) {
   const [name, setName] = useState('');
   const [daw, setDaw] = useState('Ableton');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8000/setup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, daw }),
-      });
-      const result = await response.json();
-      onComplete(result);
-    } catch (error) {
-      alert('Setup failed: ' + error);
-    }
-  };
 
   return (
-    <div style={setupStyle}>
-      <form style={formStyle} onSubmit={handleSubmit}>
-        <h2 style={{ color: '#ffb400', marginBottom: '1em' }}>Setup Your Studio</h2>
-        <label style={labelStyle}>Your Name</label>
-        <input style={inputStyle} type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name" required />
+    <div className="setup-page">
+      <form className="setup-form" onSubmit={handleSubmit}>
+        <h2 className="setup-title">Setup Your Studio</h2>
+        <label className="setup-label">Your Name</label>
+        <input className="setup-input" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name" required />
         <label style={labelStyle}>Select Your DAW</label>
         <select style={inputStyle} value={daw} onChange={e => setDaw(e.target.value)}>
           <option value="Ableton">Ableton Live</option>

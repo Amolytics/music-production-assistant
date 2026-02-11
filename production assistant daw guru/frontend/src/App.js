@@ -17,21 +17,7 @@ function App() {
     <Router>
       <div>
         <button
-          style={{
-            position: 'fixed',
-            bottom: '2em',
-            left: '2em',
-            zIndex: 1100,
-            background: '#ffb400',
-            color: '#232323',
-            border: 'none',
-            borderRadius: '12px',
-            padding: '0.75em 1.5em',
-            fontWeight: 700,
-            fontSize: '1em',
-            boxShadow: '0 2px 8px #0004',
-            cursor: 'pointer',
-          }}
+          className="toggle-chat-btn"
           onClick={() => setChatVisible(v => !v)}
         >
           {chatVisible ? 'Hide Chat' : 'Show Chat'}
