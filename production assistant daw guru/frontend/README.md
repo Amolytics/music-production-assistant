@@ -48,8 +48,13 @@ The Osano cookie consent script was removed from the project because it injected
    npm run start
    ```
 
+## Navigation
+
+- The app now uses a tab navigation at the top for switching between Studio and Settings.
+- The Welcome screen and Setup flow have been removed for a streamlined experience.
+- Settings are accessible as a dedicated tab.
+
 ## Notes
 
 - Ensure your backend API URL is set via the `VITE_BACKEND_URL` environment variable for production.
-- For static hosting, use the provided Dockerfile (nginx serves the built frontend).
 - Favicon and all static assets should be placed in the `public/` directory.

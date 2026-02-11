@@ -23,14 +23,17 @@ function App() {
           {chatVisible ? 'Hide Chat' : 'Show Chat'}
         </button>
         <DetachableChatBox visible={chatVisible} onClose={() => setChatVisible(false)} />
+        {/* Tab Navigation */}
+        <nav style={{ display: 'flex', gap: '1em', padding: '1em', background: '#232323', color: '#ffb400', justifyContent: 'center' }}>
+          <a href="/main" style={{ color: '#ffb400', textDecoration: 'none', fontWeight: 'bold' }}>Studio</a>
+          <a href="/settings" style={{ color: '#ffb400', textDecoration: 'none', fontWeight: 'bold' }}>Settings</a>
+        </nav>
         <Routes>
-                    <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
-          <Route path="/" element={<WelcomePage onStart={() => window.location.href = '/setup'} />} />
-          <Route path="/setup" element={<SetupPage onComplete={data => { setUser(data); window.location.href = '/main'; }} />} />
+          <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
           <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); window.location.href = '/tuning'; }} />} />
           <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} />
           <Route path="/studio" element={<MainStudioInterface />} />
-          {/* Add more routes for advanced features */}
+          <Route path="/" element={<MainStudioInterface />} />
         </Routes>
       </div>
     </Router>
