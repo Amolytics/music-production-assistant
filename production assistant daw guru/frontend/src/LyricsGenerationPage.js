@@ -61,59 +61,13 @@ function LyricsGenerationPage({ onGenerate }) {
           <option value="lyrics">Lyrics Only</option>
           <option value="voice">Lyrics + Voice</option>
         </select>
-        <label className="lyrics-label">Upload Song File (optional)</label>
-        <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
-        <button className="lyrics-button" type="submit">Generate</button>
-      </form>
-    </div>
-  );
-          <option value="Angry">Angry</option>
-          <option value="Romantic">Romantic</option>
-          <option value="Inspiring">Inspiring</option>
-        </select>
-        <label className="lyrics-label">Language</label>
-        <select className="lyrics-input" value={language} onChange={e => setLanguage(e.target.value)}>
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-          <option value="Chinese">Chinese</option>
-          <option value="Other">Other</option>
-        </select>
-        <label className="lyrics-label">Vocal Type</label>
-        <select className="lyrics-input" value={vocalType} onChange={e => setVocalType(e.target.value)}>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Child">Child</option>
-          <option value="Robotic">Robotic</option>
-          <option value="Custom">Custom</option>
-        </select>
-        <label className="lyrics-label">Ethnicity</label>
-        <select className="lyrics-input" value={ethnicity} onChange={e => setEthnicity(e.target.value)}>
-          <option value="Default">Default</option>
-          <option value="Gospel">Gospel</option>
-          <option value="Latin">Latin</option>
-          <option value="Asian">Asian</option>
-          <option value="Other">Other</option>
-        </select>
-        <label className="lyrics-label">Music Genre</label>
-        <select className="lyrics-input" value={genre} onChange={e => setGenre(e.target.value)}>
-          <option value="Pop">Pop</option>
-          <option value="Hip-Hop">Hip-Hop</option>
-          <option value="EDM">EDM</option>
-          <option value="Jazz">Jazz</option>
-          <option value="Rock">Rock</option>
-          <option value="Classical">Classical</option>
-        </select>
-        <label className="lyrics-label">Topic/Theme</label>
-        <input className="lyrics-input" type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Enter topic or theme" />
         {outputType === 'voice' && (
           <div className="lyrics-upload-section">
             <label className="lyrics-label">Upload Song (for fitting vocals)</label>
             <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
           </div>
         )}
-        <button className="lyrics-button" type="submit">Generate Lyrics</button>
+        <button className="lyrics-button" type="submit">Generate</button>
       </form>
     </div>
   );

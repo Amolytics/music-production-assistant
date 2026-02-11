@@ -130,6 +130,5 @@ import DragDropFileUpload from './DragDropFileUpload';
       </form>
     </div>
   );
-}
 
 export default DetachableChatBox;
