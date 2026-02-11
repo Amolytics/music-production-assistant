@@ -54,9 +54,10 @@ function MainStudioInterface() {
   const [sampleUrl, setSampleUrl] = React.useState('https://freesound.org/data/previews/123/123456_7037-lq.mp3');
   const [searchTerm, setSearchTerm] = React.useState('');
   const [searching, setSearching] = React.useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
   const handleSampleSearch = async () => {
     setSearching(true);
-    const response = await fetch(`http://localhost:8000/search-sample?description=${encodeURIComponent(searchTerm)}`);
+    const response = await fetch(`${backendUrl}/search-sample?description=${encodeURIComponent(searchTerm)}`);
     const result = await response.json();
     setSampleUrl(result.sample_url);
     setSearching(false);
@@ -106,7 +107,7 @@ function MainStudioInterface() {
             onClick={() => { const audio = document.getElementById('sample-audio'); audio.pause(); audio.currentTime = 0; setSampleUrl(''); }}>Discard</button>
           <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em', background: '#00c853', color: '#fff' }}
             onClick={async () => {
-              await fetch('http://localhost:8000/send-to-daw', {
+              await fetch(`${backendUrl}/send-to-daw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sample_url: sampleUrl })
@@ -132,21 +133,22 @@ function PluginManager() {
   const [plugins, setPlugins] = React.useState([]);
   const [newPlugin, setNewPlugin] = React.useState('');
   const [scanning, setScanning] = React.useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
   React.useEffect(() => {
-    fetch('http://localhost:8000/scan-plugins')
+    fetch(`${backendUrl}/scan-plugins`)
       .then(res => res.json())
       .then(data => setPlugins(data.plugins || []));
-  }, []);
+  }, [backendUrl]);
   const handleScan = async () => {
     setScanning(true);
-    const res = await fetch('http://localhost:8000/scan-plugins');
+    const res = await fetch(`${backendUrl}/scan-plugins`);
     const data = await res.json();
     setPlugins(data.plugins || []);
     setScanning(false);
   };
   const handleAdd = async () => {
     if (!newPlugin) return;
-    await fetch('http://localhost:8000/add-plugin', {
+    await fetch(`${backendUrl}/add-plugin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: newPlugin })
