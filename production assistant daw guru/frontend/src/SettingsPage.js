@@ -29,11 +29,11 @@ function SettingsPage({ onSave }) {
     <div className="settings-page">
       <form className="settings-form" onSubmit={handleSetup}>
         <h2 className="settings-title">Settings</h2>
-        <label style={labelStyle}>Paste API Key (optional)</label>
-        <input style={inputStyle} type="text" value={apiKey} onChange={e => setApiKey(e.target.value)} placeholder="Enter API key" />
-        <button style={buttonStyle} type="submit">Save & Setup</button>
-        <button style={{ ...buttonStyle, background: '#232323', color: '#ffb400', marginTop: '0.5em' }} type="button" onClick={() => window.open(claimApiUrl, '_blank')}>Claim API Key</button>
-        {setupStatus && <div style={{ color: '#ffb400', marginTop: '1em' }}>{setupStatus}</div>}
+        <label className="settings-label">Paste API Key (optional)</label>
+        <input className="settings-input" type="text" value={apiKey} onChange={e => setApiKey(e.target.value)} placeholder="Enter API key" />
+        <button className="settings-btn" type="submit">Save & Setup</button>
+        <button className="settings-btn-alt" type="button" onClick={() => window.open(claimApiUrl, '_blank')}>Claim API Key</button>
+        {setupStatus && <div className="settings-status">{setupStatus}</div>}
       </form>
     </div>
   );

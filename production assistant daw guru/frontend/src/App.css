@@ -1,3 +1,41 @@
+/* SetupPage button */
+.setup-btn {
+  width: 100%;
+  padding: 1em;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #ffb400 60%, #ff6a00 100%);
+  color: #232323;
+  font-weight: 700;
+  font-size: 1.1em;
+  border: none;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+  margin-top: 1em;
+}
+
+/* LyricsGenerationPage upload section */
+.lyrics-upload-section {
+  margin-top: 1em;
+}
+
+/* SettingsPage alt button */
+.settings-btn-alt {
+  width: 100%;
+  padding: 1em;
+  border-radius: 12px;
+  background: #232323;
+  color: #ffb400;
+  font-weight: 700;
+  font-size: 1.1em;
+  border: none;
+  box-shadow: 0 2px 8px #0004;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+.settings-status {
+  color: #ffb400;
+  margin-top: 1em;
+}
 /* App.js toggle chat button for CSP compliance */
 .toggle-chat-btn {
   position: fixed;

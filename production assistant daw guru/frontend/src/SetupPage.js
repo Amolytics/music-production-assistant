@@ -62,8 +62,8 @@ function SetupPage({ onComplete }) {
         <h2 className="setup-title">Setup Your Studio</h2>
         <label className="setup-label">Your Name</label>
         <input className="setup-input" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name" required />
-        <label style={labelStyle}>Select Your DAW</label>
-        <select style={inputStyle} value={daw} onChange={e => setDaw(e.target.value)}>
+        <label className="setup-label">Select Your DAW</label>
+        <select className="setup-input" value={daw} onChange={e => setDaw(e.target.value)}>
           <option value="Ableton">Ableton Live</option>
           <option value="FL Studio">FL Studio</option>
           <option value="Logic Pro">Logic Pro</option>
@@ -72,7 +72,7 @@ function SetupPage({ onComplete }) {
           <option value="Reaper">Reaper</option>
           <option value="Other">Other</option>
         </select>
-        <button style={buttonStyle} type="submit">Continue</button>
+        <button className="setup-btn" type="submit">Continue</button>
       </form>
     </div>
   );
