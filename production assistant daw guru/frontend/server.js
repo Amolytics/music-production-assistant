@@ -19,10 +19,10 @@ app.use((req, res, next) => {
 // Serve static files from the dist directory (Vite/React build output)
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Fallback to index.html for SPA routing
+// Fallback to index.html for SPA routing (Express v5+)
 // Render index.html as a template and inject the nonce for CSP and inline tags
 const fs = require('fs');
-app.get('*', (req, res) => {
+app.use((req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   fs.readFile(indexPath, 'utf8', (err, html) => {
     if (err) {
