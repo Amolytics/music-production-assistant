@@ -1,9 +1,28 @@
-# --- Real-time collaboration chat and file sharing ---
-from fastapi import WebSocket, Request
-from typing import List
 
+from fastapi import FastAPI, WebSocket, UploadFile, File, Request
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+from ai_services.models.music import AIMusicModel
+from backend.daw_adapter import DAWAdapter
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Store user DAW selection (in production, use DB/session)
+user_daw = None
+user_daw_version = None
+ai = AIMusicModel()
+daw_adapter = None
 chat_messages = []  # In-memory store for demo; use DB in production
 
+# --- Real-time collaboration chat and file sharing ---
 @app.websocket("/ws/chat")
 async def websocket_chat(websocket: WebSocket):
     await websocket.accept()
@@ -20,27 +39,6 @@ async def upload_file(file: UploadFile = File(...)):
     with open(f"uploads/{filename}", "wb") as f:
         f.write(content)
     return {"filename": filename, "status": "uploaded"}
-from fastapi import FastAPI, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
-from ai_services.models.music import AIMusicModel
-from backend.daw_adapter import DAWAdapter
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-# Store user DAW selection (in production, use DB/session)
-user_daw = None
-user_daw_version = None
-ai = AIMusicModel()
-daw_adapter = None
 
 @app.post("/setup")
 async def setup(request: Request):
@@ -85,8 +83,8 @@ def search_sample(description: str, genre: str = None):
 
 # Add more endpoints as needed for TTS, STT, plugin scan, etc.
 
+
 # Plugin management endpoints
-from fastapi import Request
 plugins_list = ["EQ", "Compressor", "Reverb", "Delay", "Synth", "Limiter"]
 
 @app.get("/scan-plugins")
@@ -102,7 +100,6 @@ async def add_plugin(request: Request):
     return {"plugins": plugins_list}
 
 # DAW-agnostic endpoint to send sample to DAW
-from fastapi import Request
 @app.post("/send-to-daw")
 async def send_to_daw(request: Request):
     global daw_adapter
