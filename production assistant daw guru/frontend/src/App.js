@@ -24,9 +24,9 @@ function App() {
         </button>
         <DetachableChatBox visible={chatVisible} onClose={() => setChatVisible(false)} />
         {/* Tab Navigation */}
-        <nav style={{ display: 'flex', gap: '1em', padding: '1em', background: '#232323', color: '#ffb400', justifyContent: 'center' }}>
-          <a href="/main" style={{ color: '#ffb400', textDecoration: 'none', fontWeight: 'bold' }}>Studio</a>
-          <a href="/settings" style={{ color: '#ffb400', textDecoration: 'none', fontWeight: 'bold' }}>Settings</a>
+        <nav className="app-nav">
+          <a href="/main" className="app-nav-link">Studio</a>
+          <a href="/settings" className="app-nav-link">Settings</a>
         </nav>
         <Routes>
           <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
