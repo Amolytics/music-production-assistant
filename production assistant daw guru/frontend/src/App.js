@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import WelcomePage from './WelcomePage';
 import SettingsPage from './SettingsPage';
-import SetupPage from './SetupPage';
+import SetupPage from './SetupPage.jsx';
 import LyricsGenerationPage from './LyricsGenerationPage';
 import VoiceTuningConsole from './VoiceTuningConsole';
 import DetachableChatBox from './DetachableChatBox';
