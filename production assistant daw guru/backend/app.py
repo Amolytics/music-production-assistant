@@ -22,7 +22,7 @@ async def upload_file(file: UploadFile = File(...)):
     return {"filename": filename, "status": "uploaded"}
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from ai-services.models.music import AIMusicModel
+from ai_services.models.music import AIMusicModel
 from backend.daw_adapter import DAWAdapter
 
 app = FastAPI()
