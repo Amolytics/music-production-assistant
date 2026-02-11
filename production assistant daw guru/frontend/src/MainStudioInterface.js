@@ -86,11 +86,14 @@ function MainStudioInterface() {
         </div>
         {/* Sample search and preview controls */}
         <div style={{ marginBottom: '1em', textAlign: 'center' }}>
+          <label htmlFor="sample-search" style={{ marginRight: '1em', color: '#fff', fontWeight: 600 }}>Search for a sample:</label>
           <input
+            id="sample-search"
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search for a sample..."
+            autoComplete="off"
             style={{ padding: '0.5em', borderRadius: '8px', border: '1px solid #444', width: '60%', marginRight: '1em', fontSize: '1em' }}
           />
           <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em' }}
