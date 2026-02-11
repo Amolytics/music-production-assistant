@@ -1,0 +1,160 @@
+/* Main Studio Interface Styles */
+
+.main-studio {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #232323 60%, #444 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: Montserrat, Arial, sans-serif;
+}
+
+.studio-panel {
+  background: rgba(35,35,35,0.92);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px #0008;
+  padding: 2em;
+  margin: 1em;
+  min-width: 340px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.studio-panel-wide {
+  max-width: 700px;
+  margin-top: 2em;
+}
+
+.studio-title {
+  color: #ffb400;
+  font-weight: 900;
+  margin-bottom: 1em;
+}
+
+.studio-subtitle {
+  color: #ffb400;
+  margin-bottom: 1em;
+}
+
+.studio-meter {
+  width: 100%;
+  height: 16px;
+  background: #333;
+  border-radius: 8px;
+  margin: 1em 0;
+  box-shadow: 0 2px 8px #0004;
+}
+
+.meter-bar {
+  width: 60%;
+  height: 100%;
+  background: #ffb400;
+  border-radius: 8px;
+}
+
+.studio-knobs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.studio-knob {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #444;
+  box-shadow: 0 2px 8px #0006;
+  margin: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffb400;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.studio-visualization {
+  height: 120px;
+  background: #222;
+  border-radius: 12px;
+  margin-bottom: 1em;
+  box-shadow: 0 2px 8px #0004;
+}
+
+.visualization-placeholder {
+  color: #ffb400;
+  text-align: center;
+  padding-top: 48px;
+  font-weight: 600;
+}
+
+.studio-search {
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.studio-label {
+  margin-right: 1em;
+  color: #fff;
+  font-weight: 600;
+}
+
+.studio-input {
+  padding: 0.5em;
+  border-radius: 8px;
+  border: 1px solid #444;
+  width: 60%;
+  margin-right: 1em;
+  font-size: 1em;
+}
+
+.studio-button {
+  width: auto;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  margin-right: 1em;
+  background: #444;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.studio-button.audio-play {
+  background: #444;
+  color: #fff;
+}
+
+.studio-button.audio-stop {
+  background: #232323;
+  color: #ffb400;
+}
+
+.studio-button.audio-discard {
+  background: #ff6a00;
+  color: #fff;
+}
+
+.studio-button.audio-send {
+  background: #00c853;
+  color: #fff;
+}
+
+.studio-audio-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.studio-plugin-list {
+  background: #333;
+  border-radius: 12px;
+  padding: 1em;
+  color: #ffb400;
+  font-weight: 600;
+}

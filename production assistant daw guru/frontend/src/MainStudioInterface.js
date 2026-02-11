@@ -1,6 +1,7 @@
 import React from 'react';
 import DetachableChatBox from './DetachableChatBox';
 import VoiceTuningConsole from './VoiceTuningConsole';
+import './App.css';
 
 const mainStyle = {
   minHeight: '100vh',
@@ -63,30 +64,30 @@ function MainStudioInterface() {
     setSearching(false);
   };
   return (
-    <div style={mainStyle}>
-      <div style={panelStyle}>
-        <h2 style={{ color: '#ffb400', fontWeight: 900, marginBottom: '1em' }}>DAW Guru Studio Console</h2>
-        <div style={meterStyle}>
+    <div className="main-studio">
+      <div className="studio-panel">
+        <h2 className="studio-title">DAW Guru Studio Console</h2>
+        <div className="studio-meter">
           {/* Placeholder for audio meter */}
-          <div style={{ width: '60%', height: '100%', background: '#ffb400', borderRadius: '8px' }} />
+          <div className="meter-bar" />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={knobStyle}>Tune</div>
-          <div style={knobStyle}>Mix</div>
-          <div style={knobStyle}>FX</div>
+        <div className="studio-knobs">
+          <div className="studio-knob">Tune</div>
+          <div className="studio-knob">Mix</div>
+          <div className="studio-knob">FX</div>
         </div>
         <VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} onTune={() => {}} onReplay={() => {}} />
       </div>
       {/* Audio/MIDI Visualization Panel */}
-      <div style={{ ...panelStyle, maxWidth: '700px', marginTop: '2em' }}>
-        <h3 style={{ color: '#ffb400', marginBottom: '1em' }}>Audio/MIDI Visualization</h3>
-        <div style={{ height: '120px', background: '#222', borderRadius: '12px', marginBottom: '1em', boxShadow: '0 2px 8px #0004' }}>
+      <div className="studio-panel studio-panel-wide">
+        <h3 className="studio-subtitle">Audio/MIDI Visualization</h3>
+        <div className="studio-visualization">
           {/* Visualization placeholder: waveform, MIDI notes, etc. */}
-          <div style={{ color: '#ffb400', textAlign: 'center', paddingTop: '48px', fontWeight: 600 }}>Live waveform & MIDI display coming soon...</div>
+          <div className="visualization-placeholder">Live waveform & MIDI display coming soon...</div>
         </div>
         {/* Sample search and preview controls */}
-        <div style={{ marginBottom: '1em', textAlign: 'center' }}>
-          <label htmlFor="sample-search" style={{ marginRight: '1em', color: '#fff', fontWeight: 600 }}>Search for a sample:</label>
+        <div className="studio-search">
+          <label htmlFor="sample-search" className="studio-label">Search for a sample:</label>
           <input
             id="sample-search"
             type="text"
@@ -94,21 +95,21 @@ function MainStudioInterface() {
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Search for a sample..."
             autoComplete="off"
-            style={{ padding: '0.5em', borderRadius: '8px', border: '1px solid #444', width: '60%', marginRight: '1em', fontSize: '1em' }}
+            className="studio-input"
           />
-          <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em' }}
+          <button className="studio-button"
             disabled={searching}
             onClick={handleSampleSearch}>{searching ? 'Searching...' : 'Search'}</button>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1em' }}>
+        <div className="studio-audio-controls">
           <audio id="sample-audio" src={sampleUrl} preload="auto" />
-          <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em', marginRight: '1em' }}
+          <button className="studio-button audio-play"
             onClick={() => document.getElementById('sample-audio').play()}>Play Sample</button>
-          <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em', background: '#232323', color: '#ffb400', marginRight: '1em' }}
+          <button className="studio-button audio-stop"
             onClick={() => { const audio = document.getElementById('sample-audio'); audio.pause(); audio.currentTime = 0; }}>Stop</button>
-          <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em', background: '#ff6a00', color: '#fff', marginRight: '1em' }}
+          <button className="studio-button audio-discard"
             onClick={() => { const audio = document.getElementById('sample-audio'); audio.pause(); audio.currentTime = 0; setSampleUrl(''); }}>Discard</button>
-          <button style={{ ...buttonStyle, width: 'auto', padding: '0.5em 1em', fontSize: '1em', background: '#00c853', color: '#fff' }}
+          <button className="studio-button audio-send"
             onClick={async () => {
               await fetch(`${backendUrl}/send-to-daw`, {
                 method: 'POST',
@@ -120,9 +121,9 @@ function MainStudioInterface() {
         </div>
       </div>
       {/* Plugin Management Panel */}
-      <div style={{ ...panelStyle, maxWidth: '700px', marginTop: '2em' }}>
-        <h3 style={{ color: '#ffb400', marginBottom: '1em' }}>Plugin Management</h3>
-        <div style={{ background: '#333', borderRadius: '12px', padding: '1em', color: '#ffb400', fontWeight: 600 }}>
+      <div className="studio-panel studio-panel-wide">
+        <h3 className="studio-subtitle">Plugin Management</h3>
+        <div className="studio-plugin-list">
           {/* Dynamic plugin list */}
           <PluginManager />
         </div>
