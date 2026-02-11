@@ -1,3 +1,7 @@
+# Add root route for health check and frontend requests
+@app.get("/")
+def read_root():
+    return {"status": "ok"}
 
 from fastapi import FastAPI, WebSocket, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
