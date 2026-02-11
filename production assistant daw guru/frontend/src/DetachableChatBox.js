@@ -73,7 +73,7 @@ import DragDropFileUpload from './DragDropFileUpload';
   };
 
   return (
-    <div className="chatbox" style={{ left: position.x || 'auto', top: position.y || 'auto' }}>
+    <div className={`chatbox${position.x !== undefined && position.y !== undefined ? ' chatbox-movable' : ''}`} data-left={position.x} data-top={position.y}>
       <div className="chatbox-header" onMouseDown={handleMouseDown}>
         AI Chat Assistant
         <button className="chatbox-close" onClick={onClose}>&times;</button>

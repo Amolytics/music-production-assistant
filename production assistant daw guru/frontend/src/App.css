@@ -1,3 +1,13 @@
+/* DetachableChatBox movable positioning */
+.chatbox-movable {
+  position: absolute;
+}
+.chatbox-movable[data-left] {
+  left: attr(data-left px);
+}
+.chatbox-movable[data-top] {
+  top: attr(data-top px);
+}
 /* SetupPage button */
 .setup-btn {
   width: 100%;
