@@ -11,11 +11,16 @@ You can use React, Vue, or any frontend framework you prefer.
 
 ## CSP Compliance
 
+
 This project is fully Content Security Policy (CSP) compliant:
 
 - All inline styles have been moved to external CSS (App.css).
 - No inline scripts or styles are used in React components.
 - If you add new components, use only className and external CSS for styles.
+
+## Osano Cookie Consent Script Removal
+
+The Osano cookie consent script was removed from the project because it injected an invalid SVG (`viewBox: \"0 0 100% 46px\"`) that caused browser errors and could not be fixed from the app code. If cookie consent is required, consider using an alternative provider or wait for Osano to fix this bug.
 
 ## Setup & Usage
 
