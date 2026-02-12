@@ -1,3 +1,55 @@
+/* Responsive flex for LyricsGenerationPage side-by-side/stacked */
+.lyrics-gen-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2em;
+  width: 100%;
+  padding: 1em 0.5em;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .lyrics-gen-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1em;
+    padding: 0.5em;
+  }
+  .lyrics-form, .lyrics-edit-box {
+    max-width: 100vw;
+    min-width: unset;
+    margin: 0 auto;
+    padding: 8px;
+  }
+}
+
+.lyrics-edit-box {
+  min-width: 280px;
+  max-width: 400px;
+  flex: 1;
+  margin: 0;
+  padding: 16px;
+  background: rgba(35,35,35,0.92);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0008;
+  display: flex;
+  flex-direction: column;
+}
+
+.lyrics-edit-textarea {
+  width: 100%;
+  min-height: 320px;
+  border-radius: 8px;
+  padding: 12px;
+  background: #232323;
+  color: #fff;
+  border: 1px solid #444;
+  font-size: 16px;
+  resize: vertical;
+  box-sizing: border-box;
+}
 /* App navigation styles for CSP compliance */
 .app-nav {
   display: flex;

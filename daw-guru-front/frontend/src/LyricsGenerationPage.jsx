@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HamburgerMenu from './HamburgerMenu.jsx';
 
-function LyricsGenerationPage({ onGenerate }) {
 
+function LyricsGenerationPage({ onGenerate }) {
   const [style, setStyle] = useState('Pop');
   const [emotion, setEmotion] = useState('Happy');
   const [language, setLanguage] = useState('English');
@@ -15,7 +15,8 @@ function LyricsGenerationPage({ onGenerate }) {
   const [songFile, setSongFile] = useState(null);
   const [bpm, setBpm] = useState(120);
   const [beatsPerLine, setBeatsPerLine] = useState(4);
-    const navigate = useNavigate();
+  const [generatedLyrics, setGeneratedLyrics] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +37,7 @@ function LyricsGenerationPage({ onGenerate }) {
         body: formData,
       });
       const result = await response.json();
+      setGeneratedLyrics(result.lyrics || '');
       onGenerate(result);
     } catch (error) {
       alert('Lyrics generation failed: ' + error);
@@ -43,10 +45,10 @@ function LyricsGenerationPage({ onGenerate }) {
   };
 
   return (
-    <div className="central-page">
+    <div className="central-page lyrics-gen-flex">
       <HamburgerMenu />
-      <form className="lyrics-form" onSubmit={handleSubmit}>
-        <h2 className="lyrics-title">Generate Lyrics or Voice</h2>
+      <form className="lyrics-form" onSubmit={handleSubmit} style={{ minWidth: 280, maxWidth: 400, flex: 1, margin: 0, padding: 16 }}>
+        <h2 className="lyrics-title">Lyrics & Voice Generator</h2>
         <label className="lyrics-label">Genre</label>
         <select className="lyrics-input" value={genre} onChange={e => setGenre(e.target.value)}>
           <option value="Pop">Pop</option>
@@ -91,11 +93,38 @@ function LyricsGenerationPage({ onGenerate }) {
             <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
           </div>
         )}
-        <button className="lyrics-button" type="submit">Generate</button>
-          <button className="voice-create-btn" style={{ marginTop: 24 }} onClick={() => navigate('/tuning')}>
-            Create Voice
-          </button>
+        {/* Voice tuning controls */}
+        <div className="voice-tuning-section">
+          <label className="voice-tuning-label">Pitch</label>
+          <input type="range" min="-12" max="12" value={bpm} onChange={e => setBpm(Number(e.target.value))} className="voice-tuning-range" />
+          <div className="voice-tuning-value">{bpm} semitones</div>
+        </div>
+        <div className="voice-tuning-section">
+          <label className="voice-tuning-label">Vibrato</label>
+          <input type="range" min="0" max="100" value={beatsPerLine} onChange={e => setBeatsPerLine(Number(e.target.value))} className="voice-tuning-range" />
+          <div className="voice-tuning-value">{beatsPerLine}%</div>
+        </div>
+        <div className="voice-tuning-section">
+          <label className="voice-tuning-label">Timbre</label>
+          <select className="voice-tuning-select">
+            <option value="default">Default</option>
+            <option value="bright">Bright</option>
+            <option value="warm">Warm</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+        <button className="lyrics-button" type="submit">Generate Voice</button>
       </form>
+      {/* Editable lyrics output box */}
+      <div className="lyrics-edit-box">
+        <h3 style={{ color: '#ffb400', marginBottom: 8 }}>Generated Lyrics</h3>
+        <textarea
+          className="lyrics-edit-textarea"
+          value={generatedLyrics}
+          onChange={e => setGeneratedLyrics(e.target.value)}
+          placeholder="Generated lyrics will appear here..."
+        />
+      </div>
     </div>
   );
 }
