@@ -92,10 +92,10 @@ function VoiceGeneratorPage() {
         <div className="voice-tuning-section">
           <label className="voice-tuning-label">Lyrics to Sing</label>
           <textarea
-            className="voice-tuning-lyrics"
+            className="lyrics-edit-textarea"
+            style={{ minHeight: 320, width: '100%', borderRadius: 8, padding: 12, background: '#232323', color: '#fff', border: '1px solid #444', fontSize: 16, resize: 'vertical', boxSizing: 'border-box' }}
             value={lyrics}
             onChange={e => setLyrics(e.target.value)}
-            rows={4}
             placeholder="Paste or write lyrics here"
           />
         </div>
