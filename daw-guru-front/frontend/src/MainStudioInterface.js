@@ -90,11 +90,7 @@ function PluginManager() {
   const [newPlugin, setNewPlugin] = React.useState('');
   const [scanning, setScanning] = React.useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
-  React.useEffect(() => {
-    fetch(`${backendUrl}/scan-plugins`)
-      .then(res => res.json())
-      .then(data => setPlugins(data.plugins || []));
-  }, [backendUrl]);
+  // Only scan when button is clicked
   const handleScan = async () => {
     setScanning(true);
     const res = await fetch(`${backendUrl}/scan-plugins`);
