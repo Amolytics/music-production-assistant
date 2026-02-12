@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import WelcomePage from './WelcomePage.jsx';
 import SettingsPage from './SettingsPage.jsx';
 import LyricsGenerationPage from './LyricsGenerationPage.jsx';
-import VoiceTuningConsole from './VoiceTuningConsole.jsx';
+// import VoiceTuningConsole from './VoiceTuningConsole.jsx';
 import VoiceGeneratorPage from './VoiceGeneratorPage.jsx';
 import DetachableChatBox from './DetachableChatBox.jsx';
 import FaviconLogo from './FaviconLogo.jsx';
@@ -46,7 +46,7 @@ function App() {
           <Route path="/voice-pitch" element={<VoicePitchPage pitch={0} setPitch={() => {}} />} />
           <Route path="/voice-vibrato" element={<VoiceVibratoPage vibrato={0} setVibrato={() => {}} />} />
           <Route path="/voice-timbre" element={<VoiceTimbrePage timbre={'default'} setTimbre={() => {}} />} />
-          <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} lyrics={generatedLyrics} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} />
+          {/* <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} lyrics={generatedLyrics} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} /> */}
           <Route path="/studio" element={<MainStudioInterface />} />
           <Route path="/collaboration" element={<CollaborationPage />} />
           <Route path="/sample-search" element={<SampleSearchPage />} />
