@@ -16,6 +16,7 @@ function App() {
   return (
     <Router>
       <div>
+        <h1 style={{color: 'red'}}>Test Render</h1>
         <button
           className="toggle-chat-btn"
           onClick={() => setChatVisible(v => !v)}
