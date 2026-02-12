@@ -40,6 +40,8 @@ function HamburgerMenu() {
           <Link to="/main" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Studio</Link>
           <Link to="/settings" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Settings</Link>
           <Link to="/tuning" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Tuning</Link>
+          <Link to="/collaboration" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Collaboration</Link>
+          <Link to="/sample-search" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Sample Search</Link>
           <Link to="/" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Welcome</Link>
         </nav>
       </div>
