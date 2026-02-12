@@ -1,17 +1,9 @@
 import React from 'react';
-import HamburgerMenu from './HamburgerMenu.jsx';
 
-function WelcomePage({ onStart }) {
+function WelcomePage() {
   return (
-    <div className="welcome-bg">
-      <HamburgerMenu />
-      <div className="welcome-overlay">
-        <h1 className="welcome-title">Welcome to DAW Guru</h1>
-        <p className="welcome-subtitle">Your AI-powered studio companion</p>
-        <button className="welcome-btn" onClick={onStart}>
-          Let's make some music
-        </button>
-      </div>
+    <div style={{width:'100vw',height:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#232323'}}>
+      <img src={require('../../background.png')} alt="Welcome" style={{maxWidth:'100%',maxHeight:'100%',objectFit:'contain',borderRadius:24,boxShadow:'0 4px 32px #0008'}} />
     </div>
   );
 }
