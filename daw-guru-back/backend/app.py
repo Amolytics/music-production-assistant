@@ -1,5 +1,6 @@
 
 from fastapi import FastAPI, WebSocket, UploadFile, File, Request
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from ai_services.models.music import AIMusicModel
@@ -7,10 +8,16 @@ from daw_adapter import DAWAdapter
 
 app = FastAPI()
 
+
 # Add root route for health check and frontend requests
 @app.get("/")
 def read_root():
     return {"status": "ok"}
+
+# Serve favicon.ico
+@app.get("/favicon.ico")
+def favicon():
+    return FileResponse("favicon.ico")
 
 app.add_middleware(
     CORSMiddleware,
