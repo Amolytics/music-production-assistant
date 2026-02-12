@@ -32,7 +32,9 @@ user_daw = None
 user_daw_version = None
 ai = AIMusicModel()
 daw_adapter = None
-chat_messages = []  # In-memory store for demo; use DB in production
+# chat_messages is an in-memory store for demo purposes.
+# For production, use persistent storage (database, Redis, etc.) for chat and file uploads.
+chat_messages = []
 
 # --- Real-time collaboration chat and file sharing ---
 @app.websocket("/ws/chat")
@@ -46,8 +48,10 @@ async def websocket_chat(websocket: WebSocket):
 @app.post("/upload-file")
 async def upload_file(file: UploadFile = File(...)):
     # Save file to disk or cloud storage
+    import os
     content = await file.read()
     filename = file.filename
+    os.makedirs("uploads", exist_ok=True)
     with open(f"uploads/{filename}", "wb") as f:
         f.write(content)
     return {"filename": filename, "status": "uploaded"}

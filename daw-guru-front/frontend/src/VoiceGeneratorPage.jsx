@@ -32,8 +32,8 @@ function VoiceGeneratorPage() {
     <div className="central-page" style={{display:'flex',flexDirection:'row',gap:'2em',alignItems:'flex-start',justifyContent:'center',flexWrap:'wrap'}}>
       <HamburgerMenu />
       {/* Voice Tuning Console Placeholder */}
-      <div style={{background:'#232323',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
-        <h3 style={{color:'#ffb400',marginBottom:12}}>Voice Tuning Console</h3>
+      <div style={{background:'var(--color-bg-dark)',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
+        <h3 style={{color:'var(--color-text-accent)',marginBottom:12}}>Voice Tuning Console</h3>
         <div style={{color:'#aaa',marginBottom:12}}>Adjust the voice parameters below before generating your voice.</div>
         <div className="voice-tuning-section">
           <label className="voice-tuning-label">Voice Type</label>
@@ -86,14 +86,14 @@ function VoiceGeneratorPage() {
         </div>
       </div>
       {/* Voice Generation Placeholder */}
-      <div style={{background:'#232323',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
-        <h3 style={{color:'#ffb400',marginBottom:12}}>Voice Generation</h3>
+      <div style={{background:'var(--color-bg-dark)',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
+        <h3 style={{color:'var(--color-text-accent)',marginBottom:12}}>Voice Generation</h3>
         <div style={{color:'#aaa',marginBottom:12}}>Paste lyrics and generate your custom voice below.</div>
         <div className="voice-tuning-section">
           <label className="voice-tuning-label">Lyrics to Sing</label>
           <textarea
             className="lyrics-edit-textarea"
-            style={{ minHeight: 320, width: '100%', borderRadius: 8, padding: 12, background: '#232323', color: '#fff', border: '1px solid #444', fontSize: 16, resize: 'vertical', boxSizing: 'border-box' }}
+            style={{ minHeight: 320, width: '100%', borderRadius: 8, padding: 12, background: 'var(--color-bg-dark)', color: 'var(--color-text-main)', border: '1.5px solid var(--color-border)', fontSize: 16, resize: 'vertical', boxSizing: 'border-box' }}
             value={lyrics}
             onChange={e => setLyrics(e.target.value)}
             placeholder="Paste or write lyrics here"
