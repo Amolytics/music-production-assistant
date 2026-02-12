@@ -4,6 +4,7 @@ import WelcomePage from './WelcomePage.jsx';
 import SettingsPage from './SettingsPage.jsx';
 import LyricsGenerationPage from './LyricsGenerationPage.jsx';
 import VoiceTuningConsole from './VoiceTuningConsole.jsx';
+import VoiceGeneratorPage from './VoiceGeneratorPage.jsx';
 import DetachableChatBox from './DetachableChatBox.jsx';
 import FaviconLogo from './FaviconLogo.jsx';
 import MainStudioInterface from './MainStudioInterface.jsx';
@@ -41,6 +42,7 @@ function App() {
           <Route path="/setup" element={<SetupPage onComplete={user => { setUser(user); window.location.href = '/main'; }} />} />
           <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); setGeneratedLyrics(opts.lyrics || ''); window.location.href = '/tuning'; }} />} />
           <Route path="/lyrics-generation" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); window.location.href = '/tuning'; }} />} />
+          <Route path="/voice-generator" element={<VoiceGeneratorPage />} />
           <Route path="/voice-pitch" element={<VoicePitchPage pitch={0} setPitch={() => {}} />} />
           <Route path="/voice-vibrato" element={<VoiceVibratoPage vibrato={0} setVibrato={() => {}} />} />
           <Route path="/voice-timbre" element={<VoiceTimbrePage timbre={'default'} setTimbre={() => {}} />} />

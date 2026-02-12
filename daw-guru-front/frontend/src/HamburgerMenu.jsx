@@ -39,6 +39,7 @@ function HamburgerMenu() {
         <nav className="drawer-nav" style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Link to="/main" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Studio</Link>
           <Link to="/lyrics-generation" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Lyrics Generator</Link>
+          <Link to="/voice-generator" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Generator</Link>
           <Link to="/settings" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Settings</Link>
           <Link to="/tuning" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Tuning</Link>
           <Link to="/collaboration" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Collaboration</Link>
