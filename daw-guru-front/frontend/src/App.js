@@ -6,6 +6,7 @@ import SetupPage from './SetupPage.jsx';
 import LyricsGenerationPage from './LyricsGenerationPage';
 import VoiceTuningConsole from './VoiceTuningConsole';
 import DetachableChatBox from './DetachableChatBox';
+import FaviconLogo from './FaviconLogo';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/studio" element={<MainStudioInterface />} />
           <Route path="/" element={<MainStudioInterface />} />
         </Routes>
+        <FaviconLogo />
       </div>
     </Router>
   );
