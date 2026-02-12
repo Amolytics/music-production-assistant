@@ -6,12 +6,9 @@ const app = express();
 // Set CSP header with nonce for all responses
 const crypto = require('crypto');
 app.use((req, res, next) => {
-  // Generate a random nonce for each request
-  const nonce = crypto.randomBytes(16).toString('base64');
-  res.locals.nonce = nonce;
   res.setHeader(
     'Content-Security-Policy',
-    `script-src 'self' https://js.stripe.com blob: 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' https://m.stripe.network; object-src 'none'; base-uri 'self';`
+    "script-src 'self' https://js.stripe.com blob: 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://m.stripe.network; object-src 'none'; base-uri 'self';"
   );
   next();
 });
