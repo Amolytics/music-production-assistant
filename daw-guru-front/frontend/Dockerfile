@@ -1,5 +1,6 @@
+
 # Dockerfile for Vite/React frontend with Express server for nonce-based CSP
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
