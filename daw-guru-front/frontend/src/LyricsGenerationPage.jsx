@@ -43,7 +43,7 @@ function LyricsGenerationPage({ onGenerate }) {
   };
 
   return (
-    <div className="lyrics-page">
+    <div className="central-page">
       <HamburgerMenu />
       <form className="lyrics-form" onSubmit={handleSubmit}>
         <h2 className="lyrics-title">Generate Lyrics or Voice</h2>

@@ -13,7 +13,7 @@ function SampleSearchPage() {
   };
 
   return (
-    <div className="sample-search-page">
+    <div className="central-page sample-search-page">
       <HamburgerMenu />
       <h2 className="sample-search-title">Sample Search</h2>
       <input

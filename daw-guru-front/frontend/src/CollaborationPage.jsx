@@ -4,7 +4,7 @@ import DetachableChatBox from './DetachableChatBox.jsx';
 
 function CollaborationPage() {
   return (
-    <div className="collaboration-page">
+    <div className="central-page collaboration-page">
       <HamburgerMenu />
       <h2 className="collab-title">Collaboration Studio</h2>
       <DetachableChatBox visible={true} onClose={() => {}} />

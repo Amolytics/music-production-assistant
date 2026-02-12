@@ -29,7 +29,7 @@ function VoiceTuningConsole({ initialTuning, onTune, onReplay, lyrics }) {
   };
 
   return (
-    <div className="voice-tuning-console">
+    <div className="central-page voice-tuning-console">
       <HamburgerMenu />
       <h2 className="voice-tuning-title">Voice Tuning Console</h2>
       <div className="voice-tuning-section">
