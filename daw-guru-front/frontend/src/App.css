@@ -1,3 +1,29 @@
+/* === Playful Music Production Color Palette === */
+:root {
+  --color-bg-dark: #1a1a2e;
+  --color-bg-panel: #22223b;
+  --color-bg-accent: #00adb5;
+  --color-bg-accent2: #ef476f;
+  --color-bg-highlight: #ffd166;
+  --color-bg-blue: #3a86ff;
+  --color-text-main: #f8f8ff;
+  --color-text-accent: #ffd166;
+  --color-text-dark: #1a1a2e;
+  --color-border: #00adb5;
+}
+/* === Playful Music Production Color Palette === */
+:root {
+  --color-bg-dark: #1a1a2e;
+  --color-bg-panel: #22223b;
+  --color-bg-accent: #00adb5;
+  --color-bg-accent2: #ef476f;
+  --color-bg-highlight: #ffd166;
+  --color-bg-blue: #3a86ff;
+  --color-text-main: #f8f8ff;
+  --color-text-accent: #ffd166;
+  --color-text-dark: #1a1a2e;
+  --color-border: #00adb5;
+}
 /* Responsive flex for LyricsGenerationPage side-by-side/stacked */
 .lyrics-gen-flex {
   display: flex;
@@ -31,7 +57,7 @@
   flex: 1;
   margin: 0;
   padding: 16px;
-  background: rgba(35,35,35,0.92);
+  background: rgba(34,34,59,0.92); /* var(--color-bg-panel) */
   border-radius: 16px;
   box-shadow: 0 4px 24px #0008;
   display: flex;
@@ -43,9 +69,9 @@
   min-height: 320px;
   border-radius: 8px;
   padding: 12px;
-  background: #232323;
-  color: #fff;
-  border: 1px solid #444;
+  background: var(--color-bg-dark);
+  color: var(--color-text-main);
+  border: 1.5px solid var(--color-border);
   font-size: 16px;
   resize: vertical;
   box-sizing: border-box;
@@ -55,12 +81,12 @@
   display: flex;
   gap: 1em;
   padding: 1em;
-  background: #232323;
-  color: #ffb400;
+  background: linear-gradient(90deg, var(--color-bg-dark) 60%, var(--color-bg-accent) 100%);
+  color: var(--color-text-accent);
   justify-content: center;
 }
 .app-nav-link {
-  color: #ffb400;
+  color: var(--color-text-accent);
   text-decoration: none;
   font-weight: bold;
   font-size: 1.1em;
@@ -69,7 +95,8 @@
   transition: background 0.2s;
 }
 .app-nav-link:hover {
-  background: #444;
+  background: var(--color-bg-accent);
+  color: var(--color-text-dark);
 }
 /* SetupPage styles for CSP compliance */
 .setup-page {
@@ -128,8 +155,8 @@
   width: 100%;
   padding: 1em;
   border-radius: 12px;
-  background: linear-gradient(90deg, #ffb400 60%, #ff6a00 100%);
-  color: #232323;
+  background: linear-gradient(90deg, var(--color-bg-accent) 60%, var(--color-bg-highlight) 100%);
+  color: var(--color-text-dark);
   font-weight: 700;
   font-size: 1.1em;
   border: none;
@@ -320,18 +347,18 @@
     min-width: unset;
     max-width: unset;
   }
-}
-
-.lyrics-form {
+      background: var(--color-bg-panel);
+      color: var(--color-text-main);
+      border: 1.5px solid var(--color-border);
   background: rgba(35,35,35,0.92);
-  border-radius: 24px;
-  padding: 2em 2em;
-  box-shadow: 0 8px 32px #0008;
-  text-align: center;
-  min-width: 320px;
-}
-
-.lyrics-label {
+      width: 100%;
+      padding: 0.75em;
+      border-radius: 8px;
+      border: 1.5px solid var(--color-border);
+      margin-bottom: 1em;
+      font-size: 1em;
+      background: var(--color-bg-panel);
+      color: var(--color-text-main);
   display: block;
   margin-bottom: 0.5em;
   font-weight: 600;
@@ -342,11 +369,13 @@
   width: 100%;
   padding: 0.75em;
   border-radius: 8px;
-  border: 1px solid #444;
-  margin-bottom: 1em;
-  font-size: 1em;
+    border: 1.5px solid var(--color-border);
+    margin-bottom: 1em;
+    font-size: 1em;
   background: #333;
   color: #fff;
+    background: var(--color-bg-panel);
+    color: var(--color-text-main);
 }
 
 .lyrics-title {
@@ -475,9 +504,9 @@
 .studio-input {
   padding: 0.5em;
   border-radius: 8px;
-  border: 1px solid #444;
-  width: 60%;
-  margin-right: 1em;
+    border: 1px solid var(--color-border);
+    width: 60%;
+    margin-right: 1em;
   font-size: 1em;
 }
 
