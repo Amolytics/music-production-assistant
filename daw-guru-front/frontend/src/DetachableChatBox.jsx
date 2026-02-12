@@ -1,9 +1,8 @@
+
 import React, { useState } from 'react';
-// WebSocket for real-time chat
-import DragDropFileUpload from './DragDropFileUpload';
+import DragDropFileUpload from './DragDropFileUpload.jsx';
 
-// ...existing code...
-
+function DetachableChatBox({ visible, onClose }) {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -130,5 +129,6 @@ import DragDropFileUpload from './DragDropFileUpload';
       </form>
     </div>
   );
+}
 
 export default DetachableChatBox;

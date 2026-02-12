@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import WelcomePage from './WelcomePage.js';
-import SettingsPage from './SettingsPage.js';
-import LyricsGenerationPage from './LyricsGenerationPage.js';
-import VoiceTuningConsole from './VoiceTuningConsole.js';
-import DetachableChatBox from './DetachableChatBox.js';
-import FaviconLogo from './FaviconLogo.js';
+import WelcomePage from './WelcomePage.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import LyricsGenerationPage from './LyricsGenerationPage.jsx';
+import VoiceTuningConsole from './VoiceTuningConsole.jsx';
+import DetachableChatBox from './DetachableChatBox.jsx';
+import FaviconLogo from './FaviconLogo.jsx';
 
 function App() {
   const [user, setUser] = useState(null);
