@@ -27,7 +27,8 @@ function LyricsGenerationPage({ onGenerate }) {
     formData.append('output_type', outputType);
     if (songFile) formData.append('song_file', songFile);
     try {
-      const response = await fetch('http://localhost:8000/generate-lyrics', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/generate-lyrics`, {
         method: 'POST',
         body: formData,
       });
