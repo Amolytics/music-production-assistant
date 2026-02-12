@@ -3,7 +3,7 @@
   background: rgba(34,34,59,0.96);
   border-radius: 48px;
   box-shadow: 0 8px 48px #000a;
-  padding: 0.05vw 0.5vw 0.02vw 0.5vw;
+  padding: 0.01vw 0.5vw 0.01vw 0.5vw;
   max-width: 350px;
   width: 100%;
   margin: 8px auto;
@@ -14,13 +14,13 @@
   flex-grow: 1;
 }
 .welcome-logo {
-  width: 120px;
-  height: 120px;
-  border-radius: 24px;
-  margin-bottom: 32px;
-  box-shadow: 0 4px 24px #0008;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px #0008;
   background: #fff;
-  padding: 12px;
+  padding: 6px;
 }
 .welcome-title {
   font-size: 3em;

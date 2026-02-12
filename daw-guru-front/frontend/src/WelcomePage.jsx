@@ -20,7 +20,7 @@ function WelcomePage() {
     >
       <div className="welcome-placeholder">
         <img
-          src="/favicon.ico"
+          src="/logo.png"
           alt="Logo"
           className="welcome-logo"
         />
