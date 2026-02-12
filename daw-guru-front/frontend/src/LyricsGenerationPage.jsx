@@ -45,10 +45,12 @@ function LyricsGenerationPage({ onGenerate }) {
   };
 
   return (
-    <div className="central-page lyrics-gen-flex">
+    <div className="central-page" style={{display:'flex',flexDirection:'row',gap:'2em',alignItems:'flex-start',justifyContent:'center',flexWrap:'wrap'}}>
       <HamburgerMenu />
-      <form className="lyrics-form" onSubmit={handleSubmit} style={{ minWidth: 280, maxWidth: 400, flex: 1, margin: 0, padding: 16 }}>
-        <h2 className="lyrics-title">Lyrics & Voice Generator</h2>
+      {/* Lyric Generation Controls Panel */}
+      <form className="lyrics-form" onSubmit={handleSubmit} style={{background:'#232323',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
+        <h2 className="lyrics-title">Lyrics Generator</h2>
+        <div style={{color:'#aaa',marginBottom:12}}>Fill in the details and generate your lyrics.</div>
         <label className="lyrics-label">Genre</label>
         <select className="lyrics-input" value={genre} onChange={e => setGenre(e.target.value)}>
           <option value="Pop">Pop</option>
@@ -93,31 +95,12 @@ function LyricsGenerationPage({ onGenerate }) {
             <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
           </div>
         )}
-        {/* Voice tuning controls */}
-        <div className="voice-tuning-section">
-          <label className="voice-tuning-label">Pitch</label>
-          <input type="range" min="-12" max="12" value={bpm} onChange={e => setBpm(Number(e.target.value))} className="voice-tuning-range" />
-          <div className="voice-tuning-value">{bpm} semitones</div>
-        </div>
-        <div className="voice-tuning-section">
-          <label className="voice-tuning-label">Vibrato</label>
-          <input type="range" min="0" max="100" value={beatsPerLine} onChange={e => setBeatsPerLine(Number(e.target.value))} className="voice-tuning-range" />
-          <div className="voice-tuning-value">{beatsPerLine}%</div>
-        </div>
-        <div className="voice-tuning-section">
-          <label className="voice-tuning-label">Timbre</label>
-          <select className="voice-tuning-select">
-            <option value="default">Default</option>
-            <option value="bright">Bright</option>
-            <option value="warm">Warm</option>
-            <option value="dark">Dark</option>
-          </select>
-        </div>
-        <button className="lyrics-button" type="submit">Generate Voice</button>
+        <button className="lyrics-button" type="submit" style={{marginTop:16}}>Generate Lyrics</button>
       </form>
       {/* Editable lyrics output box - always visible */}
-      <div className="lyrics-edit-box">
+      <div className="lyrics-edit-box" style={{background:'#232323',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>
         <h3 style={{ color: '#ffb400', marginBottom: 8 }}>Generated Lyrics</h3>
+        <div style={{color:'#aaa',marginBottom:12}}>Edit or paste your lyrics here.</div>
         <textarea
           className="lyrics-edit-textarea"
           value={generatedLyrics}
