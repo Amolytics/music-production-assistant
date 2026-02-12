@@ -8,7 +8,7 @@ function VoiceTuningConsole({ initialTuning, onTune, onReplay }) {
   const handleTune = async () => {
     onTune({ pitch, vibrato, timbre });
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${backendUrl}/tune-voice`, {
         method: 'POST',
         headers: {

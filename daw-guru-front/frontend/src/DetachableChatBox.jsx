@@ -11,7 +11,7 @@ function DetachableChatBox({ visible, onClose }) {
   ]);
   const [ws, setWs] = useState(null);
   React.useEffect(() => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
     const wsHost = backendUrl.replace(/^https?:\/\//, '');
     const socket = new window.WebSocket(`${wsProtocol}://${wsHost}/ws/chat`);
@@ -59,7 +59,7 @@ function DetachableChatBox({ visible, onClose }) {
     setNotification(`File uploaded: ${file.name}`);
     const formData = new FormData();
     formData.append('file', file);
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     fetch(`${backendUrl}/upload-file`, {
       method: 'POST',
       body: formData,

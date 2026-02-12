@@ -9,7 +9,7 @@ function SettingsPage({ onSave }) {
   const handleSetup = async (e) => {
     e.preventDefault();
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${backendUrl}/setup`, {
         method: 'POST',
         headers: {
