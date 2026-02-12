@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
 import { useNavigate } from 'react-router-dom';
 
+function SettingsPage({ onSave }) {
   const [apiKey, setApiKey] = useState('');
   const [setupStatus, setSetupStatus] = useState('');
   const navigate = useNavigate();
