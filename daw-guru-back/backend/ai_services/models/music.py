@@ -1,3 +1,118 @@
+    def button_by_button_instructions(self, daw, task):
+        """
+        Provide button-by-button instructions for a given DAW and task.
+        Args:
+            daw (str): Name of the DAW (e.g., 'Ableton Live', 'FL Studio', 'Logic Pro', etc.)
+            task (str): The task the user wants to accomplish.
+        Returns:
+            str: Step-by-step instructions or a helpful message.
+        """
+        daw = (daw or '').lower()
+        task = (task or '').lower()
+        # Example templates for leading DAWs
+        if 'ableton' in daw:
+            if 'add track' in task:
+                return (
+                    "Ableton Live - Add Track:\n"
+                    "1. Click the 'Create' menu at the top.\n"
+                    "2. Select 'Insert Audio Track' or 'Insert MIDI Track'.\n"
+                    "3. The new track appears in your session."
+                )
+            if 'export' in task:
+                return (
+                    "Ableton Live - Export Audio:\n"
+                    "1. Go to 'File' > 'Export Audio/Video'.\n"
+                    "2. Set your export settings.\n"
+                    "3. Click 'Export' and choose a location."
+                )
+        if 'fl studio' in daw:
+            if 'add track' in task:
+                return (
+                    "FL Studio - Add Track:\n"
+                    "1. Press F6 to open the Channel Rack.\n"
+                    "2. Click the '+' button at the bottom.\n"
+                    "3. Choose the instrument or audio track you want."
+                )
+            if 'export' in task:
+                return (
+                    "FL Studio - Export Audio:\n"
+                    "1. Go to 'File' > 'Export' > 'WAV file' (or MP3, etc.).\n"
+                    "2. Set your export options.\n"
+                    "3. Click 'Start'."
+                )
+        if 'logic' in daw:
+            if 'add track' in task:
+                return (
+                    "Logic Pro - Add Track:\n"
+                    "1. Click the '+' button above the track headers.\n"
+                    "2. Choose 'Audio' or 'Software Instrument'.\n"
+                    "3. Click 'Create'."
+                )
+            if 'export' in task:
+                return (
+                    "Logic Pro - Export Audio:\n"
+                    "1. Go to 'File' > 'Export' > 'All Tracks as Audio Files' or '1 Track as Audio File'.\n"
+                    "2. Set your export options.\n"
+                    "3. Click 'Export'."
+                )
+        if 'cubase' in daw:
+            if 'add track' in task:
+                return (
+                    "Cubase - Add Track:\n"
+                    "1. Right-click in the track list area.\n"
+                    "2. Select 'Add Audio Track' or 'Add Instrument Track'.\n"
+                    "3. Configure and click 'Add Track'."
+                )
+            if 'export' in task:
+                return (
+                    "Cubase - Export Audio:\n"
+                    "1. Go to 'File' > 'Export' > 'Audio Mixdown'.\n"
+                    "2. Set your export range and options.\n"
+                    "3. Click 'Export Audio'."
+                )
+        if 'pro tools' in daw:
+            if 'add track' in task:
+                return (
+                    "Pro Tools - Add Track:\n"
+                    "1. Go to 'Track' > 'New'.\n"
+                    "2. Choose track type and number.\n"
+                    "3. Click 'Create'."
+                )
+            if 'export' in task:
+                return (
+                    "Pro Tools - Export Audio:\n"
+                    "1. Select the range to export.\n"
+                    "2. Go to 'File' > 'Bounce to' > 'Disk'.\n"
+                    "3. Set options and click 'Bounce'."
+                )
+        if 'studio one' in daw:
+            if 'add track' in task:
+                return (
+                    "Studio One - Add Track:\n"
+                    "1. Click the 'Add Track' button above the track list.\n"
+                    "2. Choose track type and click 'OK'."
+                )
+            if 'export' in task:
+                return (
+                    "Studio One - Export Audio:\n"
+                    "1. Go to 'Song' > 'Export Mixdown'.\n"
+                    "2. Set your options and click 'OK'."
+                )
+        if 'reaper' in daw:
+            if 'add track' in task:
+                return (
+                    "Reaper - Add Track:\n"
+                    "1. Double-click in the track control panel area.\n"
+                    "2. Or go to 'Track' > 'Insert New Track'."
+                )
+            if 'export' in task:
+                return (
+                    "Reaper - Export Audio:\n"
+                    "1. Go to 'File' > 'Render'.\n"
+                    "2. Set your render options.\n"
+                    "3. Click 'Render'."
+                )
+        return "Let me know your DAW and the task, and I’ll give you step-by-step instructions!"
 # DAW-aware, non-intrusive AI music model
 
 class AIMusicModel:
