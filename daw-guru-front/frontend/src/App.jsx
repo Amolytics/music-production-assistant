@@ -7,10 +7,17 @@ import VoiceTuningConsole from './VoiceTuningConsole.jsx';
 import DetachableChatBox from './DetachableChatBox.jsx';
 import FaviconLogo from './FaviconLogo.jsx';
 import MainStudioInterface from './MainStudioInterface.jsx';
+import SetupPage from './SetupPage.jsx';
+import VoicePitchPage from './VoicePitchPage.jsx';
+import VoiceVibratoPage from './VoiceVibratoPage.jsx';
+import VoiceTimbrePage from './VoiceTimbrePage.jsx';
+import CollaborationPage from './CollaborationPage.jsx';
+import SampleSearchPage from './SampleSearchPage.jsx';
 
 function App() {
   const [user, setUser] = useState(null);
   const [lyricsOptions, setLyricsOptions] = useState(null);
+  const [generatedLyrics, setGeneratedLyrics] = useState('');
   const [chatVisible, setChatVisible] = useState(true);
   const [tuningResult, setTuningResult] = useState(null);
 
@@ -31,9 +38,16 @@ function App() {
         </nav>
         <Routes>
           <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
-          <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); window.location.href = '/tuning'; }} />} />
-          <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} />
+          <Route path="/setup" element={<SetupPage onComplete={user => { setUser(user); window.location.href = '/main'; }} />} />
+          <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); setGeneratedLyrics(opts.lyrics || ''); window.location.href = '/tuning'; }} />} />
+          <Route path="/lyrics-generation" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); window.location.href = '/tuning'; }} />} />
+          <Route path="/voice-pitch" element={<VoicePitchPage pitch={0} setPitch={() => {}} />} />
+          <Route path="/voice-vibrato" element={<VoiceVibratoPage vibrato={0} setVibrato={() => {}} />} />
+          <Route path="/voice-timbre" element={<VoiceTimbrePage timbre={'default'} setTimbre={() => {}} />} />
+          <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} lyrics={generatedLyrics} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} />
           <Route path="/studio" element={<MainStudioInterface />} />
+          <Route path="/collaboration" element={<CollaborationPage />} />
+          <Route path="/sample-search" element={<SampleSearchPage />} />
           <Route path="/" element={<MainStudioInterface />} />
         </Routes>
         <FaviconLogo />
