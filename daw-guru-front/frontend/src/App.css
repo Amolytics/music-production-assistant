@@ -14,13 +14,13 @@
   flex-grow: 1;
 }
 .welcome-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
-  margin-bottom: 16px;
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  margin-bottom: 18px;
   box-shadow: 0 2px 12px #0008;
   background: #fff;
-  padding: 6px;
+  padding: 8px;
 }
 .welcome-title {
   font-size: 3em;
