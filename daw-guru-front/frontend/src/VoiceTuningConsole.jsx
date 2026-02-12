@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
 
-function VoiceTuningConsole({ initialTuning, onTune, onReplay }) {
+function VoiceTuningConsole({ initialTuning, onTune, onReplay, lyrics }) {
   const [pitch, setPitch] = useState(initialTuning.pitch || 0);
   const [vibrato, setVibrato] = useState(initialTuning.vibrato || 0);
   const [timbre, setTimbre] = useState(initialTuning.timbre || 'default');
