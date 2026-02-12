@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import WelcomePage from './WelcomePage.jsx';
 import SettingsPage from './SettingsPage.jsx';
 import LyricsGenerationPage from './LyricsGenerationPage.jsx';
 import VoiceTuningConsole from './VoiceTuningConsole.jsx';
 import DetachableChatBox from './DetachableChatBox.jsx';
 import FaviconLogo from './FaviconLogo.jsx';
+import MainStudioInterface from './MainStudioInterface.jsx';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,8 +26,8 @@ function App() {
         <DetachableChatBox visible={chatVisible} onClose={() => setChatVisible(false)} />
         {/* Tab Navigation */}
         <nav className="app-nav">
-          <a href="/main" className="app-nav-link">Studio</a>
-          <a href="/settings" className="app-nav-link">Settings</a>
+          <Link to="/main" className="app-nav-link">Studio</Link>
+          <Link to="/settings" className="app-nav-link">Settings</Link>
         </nav>
         <Routes>
           <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
