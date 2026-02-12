@@ -17,6 +17,7 @@ function MainStudioInterface() {
   };
   return (
     <div className="main-studio">
+      <h1 style={{color: 'red', textAlign: 'center'}}>Studio Loaded - Test Element</h1>
       <div className="studio-panel">
         <h2 className="studio-title">DAW Guru Studio Console</h2>
         <div className="studio-meter">
