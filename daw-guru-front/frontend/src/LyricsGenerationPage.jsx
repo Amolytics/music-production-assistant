@@ -115,14 +115,14 @@ function LyricsGenerationPage({ onGenerate }) {
         </div>
         <button className="lyrics-button" type="submit">Generate Voice</button>
       </form>
-      {/* Editable lyrics output box */}
+      {/* Editable lyrics output box - always visible */}
       <div className="lyrics-edit-box">
         <h3 style={{ color: '#ffb400', marginBottom: 8 }}>Generated Lyrics</h3>
         <textarea
           className="lyrics-edit-textarea"
           value={generatedLyrics}
           onChange={e => setGeneratedLyrics(e.target.value)}
-          placeholder="Generated lyrics will appear here..."
+          placeholder="Generated lyrics will appear here or paste your own..."
         />
       </div>
     </div>
