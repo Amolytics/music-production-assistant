@@ -1,10 +1,10 @@
 import React from 'react';
-
-// ...existing code...
+import HamburgerMenu from './HamburgerMenu.jsx';
 
 function WelcomePage({ onStart }) {
   return (
     <div className="welcome-bg">
+      <HamburgerMenu />
       <div className="welcome-overlay">
         <h1 className="welcome-title">Welcome to DAW Guru</h1>
         <p className="welcome-subtitle">Your AI-powered studio companion</p>

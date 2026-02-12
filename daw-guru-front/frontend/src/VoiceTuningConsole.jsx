@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import HamburgerMenu from './HamburgerMenu.jsx';
 
 function VoiceTuningConsole({ initialTuning, onTune, onReplay }) {
   const [pitch, setPitch] = useState(initialTuning.pitch || 0);
@@ -25,6 +26,7 @@ function VoiceTuningConsole({ initialTuning, onTune, onReplay }) {
 
   return (
     <div className="voice-tuning-console">
+      <HamburgerMenu />
       <h2 className="voice-tuning-title">Voice Tuning Console</h2>
       <div className="voice-tuning-section">
         <label className="voice-tuning-label">Pitch</label>

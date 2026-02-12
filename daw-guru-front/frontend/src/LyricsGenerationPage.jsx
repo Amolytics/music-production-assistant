@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-
+import HamburgerMenu from './HamburgerMenu.jsx';
 
 function LyricsGenerationPage({ onGenerate }) {
 
@@ -41,6 +40,7 @@ function LyricsGenerationPage({ onGenerate }) {
 
   return (
     <div className="lyrics-page">
+      <HamburgerMenu />
       <form className="lyrics-form" onSubmit={handleSubmit}>
         <h2 className="lyrics-title">Generate Lyrics or Voice</h2>
         <label className="lyrics-label">Genre</label>

@@ -1,5 +1,5 @@
 import React from 'react';
-// import DetachableChatBox from './DetachableChatBox';
+import HamburgerMenu from './HamburgerMenu.jsx';
 import VoiceTuningConsole from './VoiceTuningConsole';
 import './App.css';
 
@@ -17,6 +17,7 @@ function MainStudioInterface() {
   };
   return (
     <div className="main-studio">
+      <HamburgerMenu />
       <div className="studio-panel">
         <h2 className="studio-title">DAW Guru Studio Console</h2>
         <div className="studio-meter">
@@ -49,83 +50,11 @@ function MainStudioInterface() {
             autoComplete="off"
             className="studio-input"
           />
-          <button className="studio-button"
-            disabled={searching}
-            onClick={handleSampleSearch}>{searching ? 'Searching...' : 'Search'}</button>
+          <button className="studio-search-btn" onClick={handleSampleSearch} disabled={searching}>
+            {searching ? 'Searching...' : 'Search'}
+          </button>
+          <audio controls src={sampleUrl} className="studio-audio-preview" />
         </div>
-        <div className="studio-audio-controls">
-          <audio id="sample-audio" src={sampleUrl} preload="auto" />
-          <button className="studio-button audio-play"
-            onClick={() => document.getElementById('sample-audio').play()}>Play Sample</button>
-          <button className="studio-button audio-stop"
-            onClick={() => { const audio = document.getElementById('sample-audio'); audio.pause(); audio.currentTime = 0; }}>Stop</button>
-          <button className="studio-button audio-discard"
-            onClick={() => { const audio = document.getElementById('sample-audio'); audio.pause(); audio.currentTime = 0; setSampleUrl(''); }}>Discard</button>
-          <button className="studio-button audio-send"
-            onClick={async () => {
-              await fetch(`${backendUrl}/send-to-daw`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sample_url: sampleUrl })
-              });
-              alert('Sample sent to DAW!');
-            }}>Send to DAW</button>
-        </div>
-      </div>
-      {/* Plugin Management Panel */}
-      <div className="studio-panel studio-panel-wide">
-        <h3 className="studio-subtitle">Plugin Management</h3>
-        <div className="studio-plugin-list">
-          {/* Dynamic plugin list */}
-          <PluginManager />
-        </div>
-      </div>
-      {/* Chat box removed to ensure only one instance is rendered globally */}
-    </div>
-  );
-}
-
-function PluginManager() {
-  const [plugins, setPlugins] = React.useState([]);
-  const [newPlugin, setNewPlugin] = React.useState('');
-  const [scanning, setScanning] = React.useState(false);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  // Only scan when button is clicked
-  const handleScan = async () => {
-    setScanning(true);
-    const res = await fetch(`${backendUrl}/scan-plugins`);
-    const data = await res.json();
-    setPlugins(data.plugins || []);
-    setScanning(false);
-  };
-  const handleAdd = async () => {
-    if (!newPlugin) return;
-    await fetch(`${backendUrl}/add-plugin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newPlugin })
-    });
-    setPlugins([...plugins, newPlugin]);
-    setNewPlugin('');
-  };
-  return (
-    <div className="plugin-manager">
-      <div className="plugin-list-section">
-        <strong>Plugins:</strong>
-        <ul className="plugin-list">
-          {plugins.map((p, idx) => <li key={idx}>{p}</li>)}
-        </ul>
-      </div>
-      <div className="plugin-controls">
-        <button className="plugin-scan-btn" onClick={handleScan} disabled={scanning}>{scanning ? 'Scanning...' : 'Scan Plugins'}</button>
-        <input
-          type="text"
-          value={newPlugin}
-          onChange={e => setNewPlugin(e.target.value)}
-          placeholder="Add plugin..."
-          className="plugin-input"
-        />
-        <button className="plugin-add-btn" onClick={handleAdd}>Add Plugin</button>
       </div>
     </div>
   );

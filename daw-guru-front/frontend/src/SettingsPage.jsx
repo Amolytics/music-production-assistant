@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-
+import HamburgerMenu from './HamburgerMenu.jsx';
 
 function SettingsPage({ onSave }) {
   const [apiKey, setApiKey] = useState('');
@@ -20,6 +19,10 @@ function SettingsPage({ onSave }) {
       const result = await response.json();
       setSetupStatus(result.status || 'Setup complete');
       if (onSave) onSave(apiKey);
+      // Redirect to main console after successful setup
+      if (result.status === 'Setup complete' || result.status) {
+        window.location.href = '/studio';
+      }
     } catch (error) {
       setSetupStatus('Setup failed: ' + error);
     }
@@ -28,6 +31,7 @@ function SettingsPage({ onSave }) {
   const claimApiUrl = 'https://platform.openai.com/account/api-keys'; // Example: OpenAI API key claim page
   return (
     <div className="settings-page">
+      <HamburgerMenu />
       <form className="settings-form" onSubmit={handleSetup}>
         <h2 className="settings-title">Settings</h2>
         <label className="settings-label">Paste API Key (optional)</label>
