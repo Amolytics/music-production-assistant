@@ -52,7 +52,7 @@ function LyricsGenerationPage({ onGenerate }) {
         <h2 className="lyrics-title">Lyrics Generator</h2>
         <div style={{color:'#aaa',marginBottom:12}}>Fill in the details and generate your lyrics.</div>
         <label className="lyrics-label">Genre</label>
-        <select className="lyrics-input" value={genre} onChange={e => setGenre(e.target.value)}>
+        <select className="music-input" value={genre} onChange={e => setGenre(e.target.value)}>
           <option value="Pop">Pop</option>
           <option value="Rock">Rock</option>
           <option value="Hip-Hop">Hip-Hop</option>
@@ -62,9 +62,9 @@ function LyricsGenerationPage({ onGenerate }) {
           <option value="Other">Other</option>
         </select>
         <label className="lyrics-label">Style</label>
-        <input className="lyrics-input" type="text" value={style} onChange={e => setStyle(e.target.value)} placeholder="Style (e.g. Ballad, Rap)" required />
+        <input className="music-input" type="text" value={style} onChange={e => setStyle(e.target.value)} placeholder="Style (e.g. Ballad, Rap)" required />
         <label className="lyrics-label">Emotion</label>
-        <select className="lyrics-input" value={emotion} onChange={e => setEmotion(e.target.value)}>
+        <select className="music-input" value={emotion} onChange={e => setEmotion(e.target.value)}>
           <option value="Happy">Happy</option>
           <option value="Sad">Sad</option>
           <option value="Angry">Angry</option>
@@ -73,29 +73,29 @@ function LyricsGenerationPage({ onGenerate }) {
           <option value="Other">Other</option>
         </select>
         <label className="lyrics-label">BPM</label>
-        <input className="lyrics-input" type="number" value={bpm} onChange={e => setBpm(Number(e.target.value))} min={40} max={240} placeholder="Beats Per Minute" required />
+        <input className="music-input" type="number" value={bpm} onChange={e => setBpm(Number(e.target.value))} min={40} max={240} placeholder="Beats Per Minute" required />
         <label className="lyrics-label">Beats Per Line</label>
-        <input className="lyrics-input" type="number" value={beatsPerLine} onChange={e => setBeatsPerLine(Number(e.target.value))} min={1} max={16} placeholder="Beats Per Line" required />
+        <input className="music-input" type="number" value={beatsPerLine} onChange={e => setBeatsPerLine(Number(e.target.value))} min={1} max={16} placeholder="Beats Per Line" required />
         <label className="lyrics-label">Language</label>
-        <input className="lyrics-input" type="text" value={language} onChange={e => setLanguage(e.target.value)} placeholder="Language (e.g. English)" required />
+        <input className="music-input" type="text" value={language} onChange={e => setLanguage(e.target.value)} placeholder="Language (e.g. English)" required />
         <label className="lyrics-label">Vocal Type</label>
-        <input className="lyrics-input" type="text" value={vocalType} onChange={e => setVocalType(e.target.value)} placeholder="Vocal Type (e.g. Male, Female)" required />
+        <input className="music-input" type="text" value={vocalType} onChange={e => setVocalType(e.target.value)} placeholder="Vocal Type (e.g. Male, Female)" required />
         <label className="lyrics-label">Ethnicity</label>
-        <input className="lyrics-input" type="text" value={ethnicity} onChange={e => setEthnicity(e.target.value)} placeholder="Ethnicity (optional)" />
+        <input className="music-input" type="text" value={ethnicity} onChange={e => setEthnicity(e.target.value)} placeholder="Ethnicity (optional)" />
         <label className="lyrics-label">Topic</label>
-        <input className="lyrics-input" type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Song topic or keywords" required />
+        <input className="music-input" type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Song topic or keywords" required />
         <label className="lyrics-label">Output Type</label>
-        <select className="lyrics-input" value={outputType} onChange={e => setOutputType(e.target.value)}>
+        <select className="music-input" value={outputType} onChange={e => setOutputType(e.target.value)}>
           <option value="lyrics">Lyrics Only</option>
           <option value="voice">Lyrics + Voice</option>
         </select>
         {outputType === 'voice' && (
           <div className="lyrics-upload-section">
             <label className="lyrics-label">Upload Song (for fitting vocals)</label>
-            <input className="lyrics-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
+            <input className="music-input" type="file" accept="audio/*" onChange={e => setSongFile(e.target.files[0])} />
           </div>
         )}
-        <button className="lyrics-button" type="submit" style={{marginTop:16}}>Generate Lyrics</button>
+        <button className="music-input" type="submit" style={{marginTop:16}}>Generate Lyrics</button>
       </form>
       {/* Editable lyrics output box - always visible */}
       <div className="lyrics-edit-box" style={{background:'#232323',borderRadius:16,padding:24,minWidth:300,maxWidth:400,boxShadow:'0 2px 8px #0006',flex:1}}>

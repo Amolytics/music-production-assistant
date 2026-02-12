@@ -28,6 +28,7 @@ function NavigationPage() {
           <button
             key={page.path}
             onClick={() => navigate(page.path)}
+            className="music-input"
             style={{
               minWidth: 180,
               minHeight: 64,

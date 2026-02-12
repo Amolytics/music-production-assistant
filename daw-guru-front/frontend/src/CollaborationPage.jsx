@@ -24,13 +24,14 @@ function CollaborationPage() {
         </div>
         <form onSubmit={handleSend} style={{display:'flex',gap:8}}>
           <input
+            className="music-input"
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Type a message..."
-            style={{flex:1,padding:8,borderRadius:8,border:'1px solid #444',background:'#333',color:'#fff'}}
+            style={{flex:1}}
           />
-          <button type="submit" style={{padding:'8px 16px',borderRadius:8,background:'#ffb400',color:'#232323',border:'none',fontWeight:700}}>Send</button>
+          <button className="music-input" type="submit">Send</button>
         </form>
       </div>
       <div className="collab-share">

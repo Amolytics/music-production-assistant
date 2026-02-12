@@ -18,46 +18,22 @@ function WelcomePage() {
         position: 'relative',
       }}
     >
-      <div
-        style={{
-          background: 'rgba(34,34,59,0.96)',
-          borderRadius: 48,
-          boxShadow: '0 8px 48px #000a',
-          padding: '64px 48px 48px 48px',
-          maxWidth: 520,
-          width: '90vw',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      <div className="welcome-placeholder">
         <img
           src="/favicon.ico"
           alt="Logo"
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 24,
-            marginBottom: 32,
-            boxShadow: '0 4px 24px #0008',
-            background: '#fff',
-            padding: 12,
-          }}
+          className="welcome-logo"
         />
-        <h1 style={{ fontSize: '3em', fontWeight: 900, marginBottom: 8 }}>Welcome to DAW Guru</h1>
-        <p style={{ fontSize: '1.3em', marginBottom: 48 }}>Start your music production journey!</p>
+        <h1 className="welcome-title">Welcome to DAW Guru</h1>
+        <p className="welcome-subtitle">Start your music production journey!</p>
+        <button
+          className="music-input welcome-btn"
+          onClick={() => navigate('/settings')}
+        >
+          Get Started
+        </button>
       </div>
-      <button
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          margin: '0 auto',
-          width: '100%',
-          maxWidth: 600,
-          fontFamily: 'Pacifico, cursive, sans-serif',
+    </div>
           fontSize: '2.2em',
           fontWeight: 700,
           background: 'linear-gradient(90deg, #00adb5 60%, #ffd166 100%)',
