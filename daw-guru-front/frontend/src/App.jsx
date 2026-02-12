@@ -8,7 +8,7 @@ import LyricsGenerationPage from './LyricsGenerationPage.jsx';
 import VoiceGeneratorPage from './VoiceGeneratorPage.jsx';
 import DetachableChatBox from './DetachableChatBox.jsx';
 import FaviconLogo from './FaviconLogo.jsx';
-import MainStudioInterface from './MainStudioInterface.jsx';
+// import MainStudioInterface from './MainStudioInterface.jsx';
 import SetupPage from './SetupPage.jsx';
 import CollaborationPage from './CollaborationPage.jsx';
 import SampleSearchPage from './SampleSearchPage.jsx';
@@ -38,11 +38,10 @@ function App() {
           <Route path="/settings" element={<SettingsPage onSave={key => {}} />} />
           <Route path="/nav" element={<NavigationPage />} />
           <Route path="/setup" element={<SetupPage onComplete={user => { setUser(user); window.location.href = '/main'; }} />} />
-          <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); setGeneratedLyrics(opts.lyrics || ''); window.location.href = '/tuning'; }} />} />
+          <Route path="/main" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); setGeneratedLyrics(opts.lyrics || ''); }} />} />
           <Route path="/lyrics-generation" element={<LyricsGenerationPage onGenerate={opts => { setLyricsOptions(opts); window.location.href = '/tuning'; }} />} />
           <Route path="/voice-generator" element={<VoiceGeneratorPage />} />
-          {/* Voice tuning pages removed */}
-          {/* <Route path="/tuning" element={<VoiceTuningConsole initialTuning={{ pitch: 0, vibrato: 0, timbre: 'default' }} lyrics={generatedLyrics} onTune={() => {}} onReplay={result => { setTuningResult(result); window.location.href = '/studio'; }} />} /> */}
+          {/* Voice tuning and studio pages removed */}
           <Route path="/collaboration" element={<CollaborationPage />} />
           <Route path="/sample-search" element={<SampleSearchPage />} />
           <Route path="/" element={<WelcomePage />} />
