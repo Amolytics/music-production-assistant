@@ -134,23 +134,40 @@ async def websocket_chat(websocket: WebSocket):
     context = []
     user_skill_level = None
     user_name = None
+    asked_name = False
     while True:
         data = await websocket.receive_text()
         chat_messages.append(data)
         context.append({"user": data})
-        user_message = data.lower()
+        user_message = data.strip()
+        user_message_lower = user_message.lower()
 
-        # --- Name Detection ---
+        # --- Name Detection (free-form) ---
         if user_name is None:
-            # Try to extract name from message
             import re
-            match = re.search(r"my name is ([a-zA-Z0-9_\- ]+)", user_message)
-            if match:
-                user_name = match.group(1).strip().title()
-            else:
+            # Accept a variety of name introductions
+            name_patterns = [
+                r"my name is ([a-zA-Z0-9_\- ]+)",
+                r"i'?m ([a-zA-Z0-9_\- ]+)",
+                r"call me ([a-zA-Z0-9_\- ]+)",
+                r"it'?s ([a-zA-Z0-9_\- ]+)",
+                r"you can call me ([a-zA-Z0-9_\- ]+)",
+                r"name[:]? ([a-zA-Z0-9_\- ]+)"
+            ]
+            found_name = None
+            for pat in name_patterns:
+                match = re.search(pat, user_message_lower)
+                if match:
+                    found_name = match.group(1).strip().title()
+                    break
+            if found_name:
+                user_name = found_name
+                asked_name = False
+            elif not asked_name:
                 ai_reply = "Hey! Before we get started, what should I call you?"
                 context.append({"ai": ai_reply})
                 await websocket.send_text(ai_reply)
+                asked_name = True
                 continue
 
         # --- Skill Level Detection (simple heuristic) ---
