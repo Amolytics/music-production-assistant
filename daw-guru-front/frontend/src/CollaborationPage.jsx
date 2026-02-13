@@ -1,7 +1,5 @@
 import React from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
-import DragDropFileUpload from './DragDropFileUpload.jsx';
-
 
 function CollaborationPage() {
   const [messages, setMessages] = React.useState([]);
@@ -12,6 +10,9 @@ function CollaborationPage() {
   const [friends, setFriends] = React.useState([]);
   const [screenSharing, setScreenSharing] = React.useState(false);
   const [screenStream, setScreenStream] = React.useState(null);
+  const [consentRequested, setConsentRequested] = React.useState(false);
+  const [consentPrompt, setConsentPrompt] = React.useState(false);
+  const [requester, setRequester] = React.useState(null);
 
   React.useEffect(() => {
     // TODO: Replace with real backend fetch for online users and friends
@@ -57,6 +58,8 @@ function CollaborationPage() {
       const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
       setScreenStream(stream);
       setScreenSharing(true);
+      // TODO: Notify other users and trigger consent prompt
+      setConsentRequested(true);
     } catch (err) {
       alert('Screen sharing failed or was cancelled.');
     }
@@ -67,6 +70,25 @@ function CollaborationPage() {
     }
     setScreenStream(null);
     setScreenSharing(false);
+    setConsentRequested(false);
+    setConsentPrompt(false);
+  };
+
+  // Simulate receiving a screen share request (for demo)
+  const simulateConsentPrompt = () => {
+    setConsentPrompt(true);
+    setRequester('Alice'); // Example requester
+  };
+
+  const handleAcceptScreenShare = () => {
+    setConsentPrompt(false);
+    setScreenSharing(true);
+    // TODO: Connect to WebRTC stream
+  };
+  const handleDeclineScreenShare = () => {
+    setConsentPrompt(false);
+    setMessages(prev => [...prev, { user: 'System', text: 'Sorry, I’m busy right now and can’t join the screen share.' }]);
+    // TODO: Notify requester politely
   };
 
   return (
@@ -101,6 +123,8 @@ function CollaborationPage() {
           <button className="music-input" onClick={screenSharing ? handleStopScreenShare : handleStartScreenShare}>
             {screenSharing ? 'Stop Screen Sharing' : 'Start Screen Sharing'}
           </button>
+          {/* Demo: Simulate receiving a screen share request */}
+          <button className="music-input" style={{marginLeft:8}} onClick={simulateConsentPrompt}>Simulate Screen Share Request</button>
         </div>
       </div>
       <div className="collab-online-list" style={{width:220,minWidth:180,background:'#222',borderRadius:12,padding:16,boxShadow:'0 2px 8px #0006',marginTop:32}}>
@@ -119,24 +143,76 @@ function CollaborationPage() {
           ))}
         </ul>
       </div>
-      {/* Screen share popup overlay */}
-      {screenSharing && screenStream && (
-        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.85)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <div style={{background:'#111',borderRadius:16,padding:24,boxShadow:'0 4px 24px #000a',maxWidth:'90vw',maxHeight:'90vh',display:'flex',flexDirection:'column',alignItems:'center'}}>
-            <h2 style={{color:'#fff',marginBottom:16}}>Screen Sharing</h2>
-            <video
-              autoPlay
-              controls
-              style={{width:'80vw',height:'70vh',background:'#000',borderRadius:12,boxShadow:'0 2px 8px #0006'}}
-              srcObject={screenStream}
-              ref={el => {
-                if (el && screenStream) el.srcObject = screenStream;
-              }}
-            />
-            <button className="music-input" style={{marginTop:24}} onClick={handleStopScreenShare}>Close</button>
+      {/* Consent prompt for screen sharing with flashing alert */}
+      {consentPrompt && (
+        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.7)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div style={{background:'#222',borderRadius:16,padding:32,boxShadow:'0 4px 24px #000a',maxWidth:'90vw',maxHeight:'90vh',display:'flex',flexDirection:'column',alignItems:'center'}}>
+            <FlashingAlert message={`${requester || 'A user'} wants to share their screen with you!`} />
+            <div style={{marginBottom:24,color:'#fff'}}>Do you want to accept the screen share?</div>
+            <div style={{display:'flex',gap:16}}>
+              <button className="music-input" onClick={handleAcceptScreenShare}>Accept</button>
+              <button className="music-input" onClick={handleDeclineScreenShare}>Decline</button>
+            </div>
           </div>
         </div>
       )}
+      // FlashingAlert component
+      function FlashingAlert({ message }) {
+        const [flash, setFlash] = React.useState(true);
+        React.useEffect(() => {
+          const interval = setInterval(() => setFlash(f => !f), 500);
+          return () => clearInterval(interval);
+        }, []);
+        return (
+          <div style={{
+            color: flash ? '#fff' : '#ff3',
+            background: flash ? '#c00' : '#222',
+            padding: '16px 32px',
+            borderRadius: 12,
+            fontWeight: 'bold',
+            fontSize: '1.3em',
+            marginBottom: 24,
+            boxShadow: '0 0 16px #c00a',
+            textAlign: 'center',
+            animation: 'flash 1s infinite',
+          }}>{message}</div>
+        );
+      }
+      {/* Screen share popup overlay */}
+      {screenSharing && screenStream && (
+        <ScreenSharePopup screenStream={screenStream} onClose={handleStopScreenShare} />
+      )}
+    // ScreenSharePopup component for fullscreen/small screen toggle
+    function ScreenSharePopup({ screenStream, onClose }) {
+      const [fullscreen, setFullscreen] = React.useState(true);
+      const videoRef = React.useRef(null);
+
+      React.useEffect(() => {
+        if (videoRef.current && screenStream) {
+          videoRef.current.srcObject = screenStream;
+        }
+      }, [screenStream]);
+
+      return (
+        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.85)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div style={{background:'#111',borderRadius:16,padding:24,boxShadow:'0 4px 24px #000a',maxWidth:fullscreen ? '90vw' : '600px',maxHeight:fullscreen ? '90vh' : '400px',display:'flex',flexDirection:'column',alignItems:'center'}}>
+            <h2 style={{color:'#fff',marginBottom:16}}>Screen Sharing</h2>
+            <video
+              ref={videoRef}
+              autoPlay
+              controls
+              style={{width:fullscreen ? '80vw' : '500px',height:fullscreen ? '70vh' : '300px',background:'#000',borderRadius:12,boxShadow:'0 2px 8px #0006'}}
+            />
+            <div style={{marginTop:24,display:'flex',gap:16}}>
+              <button className="music-input" onClick={() => setFullscreen(v => !v)}>
+                {fullscreen ? 'Small Screen' : 'Fullscreen'}
+              </button>
+              <button className="music-input" onClick={onClose}>Close</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
     </div>
   );
 }
