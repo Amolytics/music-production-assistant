@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import DragDropFileUpload from './DragDropFileUpload.jsx';
 
-function DetachableChatBox({ visible, onClose }) {
+function DetachableChatBox({ visible, onClose, user }) {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [messages, setMessages] = useState([
-    { sender: 'AI', text: 'Welcome! How can I help with your music today?' }
+    { sender: 'AI', text: user && user.name ? `Welcome, ${user.name}! How can I help with your music today?` : 'Welcome! How can I help with your music today?' }
   ]);
   const [ws, setWs] = useState(null);
   React.useEffect(() => {
