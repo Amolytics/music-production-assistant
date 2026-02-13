@@ -37,11 +37,11 @@ function HamburgerMenu() {
           cursor: 'pointer'
         }}>×</button>
         <nav className="drawer-nav" style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <Link to="/main" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Studio</Link>
+          {/* <Link to="/main" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Studio</Link> */}
           <Link to="/lyrics-generation" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Lyrics Generator</Link>
           <Link to="/voice-generator" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Generator</Link>
           <Link to="/settings" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Settings</Link>
-          <Link to="/tuning" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Tuning</Link>
+          {/* <Link to="/tuning" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Voice Tuning</Link> */}
           <Link to="/collaboration" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Collaboration</Link>
           <Link to="/sample-search" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Sample Search</Link>
           <Link to="/" className="drawer-link" onClick={() => setOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontSize: '1.2rem' }}>Welcome</Link>
