@@ -1,5 +1,60 @@
+// ScreenSharePopup component for fullscreen/small screen toggle
+function ScreenSharePopup({ screenStream, onClose }) {
+  const [fullscreen, setFullscreen] = React.useState(true);
+  const videoRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (videoRef.current && screenStream) {
+      videoRef.current.srcObject = screenStream;
+    }
+  }, [screenStream]);
+
+  return (
+    <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.85)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div style={{background:'#111',borderRadius:16,padding:24,boxShadow:'0 4px 24px #000a',maxWidth:fullscreen ? '90vw' : '600px',maxHeight:fullscreen ? '90vh' : '400px',display:'flex',flexDirection:'column',alignItems:'center'}}>
+        <h2 style={{color:'#fff',marginBottom:16}}>Screen Sharing</h2>
+        <video
+          ref={videoRef}
+          autoPlay
+          controls
+          style={{width:fullscreen ? '80vw' : '500px',height:fullscreen ? '70vh' : '300px',background:'#000',borderRadius:12,boxShadow:'0 2px 8px #0006'}}
+        />
+        <div style={{marginTop:24,display:'flex',gap:16}}>
+          <button className="music-input" onClick={() => setFullscreen(v => !v)}>
+            {fullscreen ? 'Small Screen' : 'Fullscreen'}
+          </button>
+          <button className="music-input" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 import React from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
+
+// FlashingAlert component (must be outside main component)
+function FlashingAlert({ message }) {
+  const [flash, setFlash] = React.useState(true);
+  React.useEffect(() => {
+    const interval = setInterval(() => setFlash(f => !f), 500);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <div style={{
+      color: flash ? '#fff' : '#ff3',
+      background: flash ? '#c00' : '#222',
+      padding: '16px 32px',
+      borderRadius: 12,
+      fontWeight: 'bold',
+      fontSize: '1.3em',
+      marginBottom: 24,
+      boxShadow: '0 0 16px #c00a',
+      textAlign: 'center',
+      animation: 'flash 1s infinite',
+    }}>{message}</div>
+  );
+}
 
 function CollaborationPage() {
   const [messages, setMessages] = React.useState([]);
@@ -156,63 +211,12 @@ function CollaborationPage() {
           </div>
         </div>
       )}
-      // FlashingAlert component
-      function FlashingAlert({ message }) {
-        const [flash, setFlash] = React.useState(true);
-        React.useEffect(() => {
-          const interval = setInterval(() => setFlash(f => !f), 500);
-          return () => clearInterval(interval);
-        }, []);
-        return (
-          <div style={{
-            color: flash ? '#fff' : '#ff3',
-            background: flash ? '#c00' : '#222',
-            padding: '16px 32px',
-            borderRadius: 12,
-            fontWeight: 'bold',
-            fontSize: '1.3em',
-            marginBottom: 24,
-            boxShadow: '0 0 16px #c00a',
-            textAlign: 'center',
-            animation: 'flash 1s infinite',
-          }}>{message}</div>
-        );
-      }
+
+
       {/* Screen share popup overlay */}
       {screenSharing && screenStream && (
         <ScreenSharePopup screenStream={screenStream} onClose={handleStopScreenShare} />
       )}
-    // ScreenSharePopup component for fullscreen/small screen toggle
-    function ScreenSharePopup({ screenStream, onClose }) {
-      const [fullscreen, setFullscreen] = React.useState(true);
-      const videoRef = React.useRef(null);
-
-      React.useEffect(() => {
-        if (videoRef.current && screenStream) {
-          videoRef.current.srcObject = screenStream;
-        }
-      }, [screenStream]);
-
-      return (
-        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.85)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <div style={{background:'#111',borderRadius:16,padding:24,boxShadow:'0 4px 24px #000a',maxWidth:fullscreen ? '90vw' : '600px',maxHeight:fullscreen ? '90vh' : '400px',display:'flex',flexDirection:'column',alignItems:'center'}}>
-            <h2 style={{color:'#fff',marginBottom:16}}>Screen Sharing</h2>
-            <video
-              ref={videoRef}
-              autoPlay
-              controls
-              style={{width:fullscreen ? '80vw' : '500px',height:fullscreen ? '70vh' : '300px',background:'#000',borderRadius:12,boxShadow:'0 2px 8px #0006'}}
-            />
-            <div style={{marginTop:24,display:'flex',gap:16}}>
-              <button className="music-input" onClick={() => setFullscreen(v => !v)}>
-                {fullscreen ? 'Small Screen' : 'Fullscreen'}
-              </button>
-              <button className="music-input" onClick={onClose}>Close</button>
-            </div>
-          </div>
-        </div>
-      );
-    }
     </div>
   );
 }
