@@ -1,12 +1,12 @@
-from flask import Blueprint, request, jsonify
 
-# Blueprint for tutorial recommendations
-recommendations_bp = Blueprint('recommendations', __name__)
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
 
-@recommendations_bp.route('/tutorials/recommend', methods=['POST'])
-def recommend_tutorials():
-    # Example: Get session/user info from request
-    data = request.get_json()
+router = APIRouter()
+
+@router.post('/tutorials/recommend')
+async def recommend_tutorials(request: Request):
+    data = await request.json()
     session_context = data.get('session_context', {})
     user_profile = data.get('user_profile', {})
 
@@ -18,4 +18,4 @@ def recommend_tutorials():
         {"title": "DAW Shortcuts", "url": "https://example.com/daw-shortcuts"}
     ]
 
-    return jsonify({"recommendations": recommendations})
+    return JSONResponse({"recommendations": recommendations})

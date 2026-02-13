@@ -1,3 +1,4 @@
+class AIMusicModel:
     def button_by_button_instructions(self, daw, task):
         """
         Provide button-by-button instructions for a given DAW and task.

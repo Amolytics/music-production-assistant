@@ -1,6 +1,17 @@
+
 # --- WebSocket signaling for real-time collaboration and screen sharing ---
-from fastapi import WebSocket
+from fastapi import FastAPI, WebSocket, UploadFile, File, Request
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+from ai_services.models.music import AIMusicModel
+from daw_adapter import DAWAdapter
+import sys
 import asyncio
+sys.path.append("./routes")
+from routes.tutorials import router as tutorials_router
+
+app = FastAPI()
 
 active_connections = set()
 
@@ -75,10 +86,11 @@ from ai_services.models.music import AIMusicModel
 from daw_adapter import DAWAdapter
 import sys
 sys.path.append("./routes")
-from routes.tutorials import recommendations_bp
+ 
+
 
 app = FastAPI()
-app.include_router(recommendations_bp)
+app.include_router(tutorials_router)
 
 
 # Add root route for health check and frontend requests
