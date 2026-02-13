@@ -1,7 +1,25 @@
-from fastapi import Body
+
+import os
+import openai
+from fastapi import FastAPI, WebSocket, UploadFile, File, Request, Body
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+from ai_services.models.music import AIMusicModel
+from daw_adapter import DAWAdapter
+
+
+import sys
+import asyncio
+sys.path.append("./routes")
+from routes.tutorials import router as tutorials_router
+
+app = FastAPI()
+
 # Store persona and user_name globally for session
 persona = os.environ.get("AI_PERSONA", "You are a friendly, creative, supportive music production assistant.")
 user_name = None
+
 # --- Setup endpoint for persona and user_name ---
 @app.post("/setup")
 async def setup_user(data: dict = Body(...)):
@@ -9,22 +27,6 @@ async def setup_user(data: dict = Body(...)):
     persona = data.get("persona", persona)
     user_name = data.get("user_name", user_name)
     return {"status": "ok", "persona": persona, "user_name": user_name}
-import os
-import openai
-
-# --- WebSocket signaling for real-time collaboration and screen sharing ---
-from fastapi import FastAPI, WebSocket, UploadFile, File, Request
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-from typing import List
-from ai_services.models.music import AIMusicModel
-from daw_adapter import DAWAdapter
-import sys
-import asyncio
-sys.path.append("./routes")
-from routes.tutorials import router as tutorials_router
-
-app = FastAPI()
 
 active_connections = set()
 
@@ -102,9 +104,9 @@ sys.path.append("./routes")
  
 
 
-app = FastAPI()
-app.include_router(tutorials_router)
 
+# Use the single app instance from the top
+app.include_router(tutorials_router)
 
 # Add root route for health check and frontend requests
 @app.get("/")
