@@ -30,8 +30,10 @@ function ScreenSharePopup({ screenStream, onClose }) {
   );
 }
 
+
 import React from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
+import DragDropFileUpload from './DragDropFileUpload.jsx';
 
 // FlashingAlert component (must be outside main component)
 function FlashingAlert({ message }) {
