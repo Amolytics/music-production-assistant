@@ -1,3 +1,5 @@
+import os
+import openai
 
 # --- WebSocket signaling for real-time collaboration and screen sharing ---
 from fastapi import FastAPI, WebSocket, UploadFile, File, Request
@@ -145,7 +147,7 @@ async def websocket_chat(websocket: WebSocket):
         # --- Name Detection (free-form) ---
         if user_name is None:
             import re
-            # Accept a variety of name introductions
+            # Accept a variety of name introductions and also single-word replies
             name_patterns = [
                 r"my name is ([a-zA-Z0-9_\- ]+)",
                 r"i'?m ([a-zA-Z0-9_\- ]+)",
@@ -160,6 +162,9 @@ async def websocket_chat(websocket: WebSocket):
                 if match:
                     found_name = match.group(1).strip().title()
                     break
+            # If user just replies with a single word (likely their name), accept it
+            if not found_name and len(user_message.split()) == 1 and user_message.isalpha():
+                found_name = user_message.strip().title()
             if found_name:
                 user_name = found_name
                 asked_name = False
@@ -178,126 +183,113 @@ async def websocket_chat(websocket: WebSocket):
         elif user_skill_level is None:
             user_skill_level = "intermediate"
 
-        # --- Intent/Topic Detection ---
-        if any(word in user_message for word in ["help", "how do i", "what's the best way", "stuck", "advice"]):
-            if user_skill_level == "beginner":
-                ai_reply = f"Of course, {user_name}! Since you’re just starting out, I can walk you through each step. Would you like button-by-button instructions for your DAW? If so, just tell me what you’re trying to do."
-            else:
-                ai_reply = f"No worries, {user_name}! If you want a hand, just let me know what you’re working on and I’ll offer some relaxed tips. Take your time, I’m here when you need me."
-
-        elif "chord progression" in user_message or "chords" in user_message or "suggest chords" in user_message:
-            # Try to extract genre and mood if mentioned
+        # --- Conversational, open-ended AI ---
+        import random
+        # Greeting detection
+        greetings = ["hi", "hello", "hey", "yo", "hiya", "greetings", "good morning", "good afternoon", "good evening"]
+        if any(greet in user_message_lower for greet in greetings):
+            greet_responses = [
+                f"Hey {user_name}! How's your music going today?",
+                f"Hello {user_name}! Ready to make some tunes?",
+                f"Hi {user_name}! What are you working on?",
+                f"Yo {user_name}! Need any inspiration or just want to chat?"
+            ]
+            ai_reply = random.choice(greet_responses)
+        # If the user asks about a drum roll, give a helpful answer
+        elif 'drum roll' in user_message_lower or 'drom roll' in user_message_lower:
+            ai_reply = (
+                f"To make a drum roll, {user_name}, try this: \n"
+                "1. Add a snare or percussion sample to a new MIDI or audio track.\n"
+                "2. Draw or record a series of fast, evenly spaced notes (16th or 32nd notes work well).\n"
+                "3. Gradually increase the note velocity or volume for a rising effect.\n"
+                "4. Optionally, automate pitch or add reverb for drama!\n"
+                "Let me know your DAW for step-by-step details."
+            )
+        # If the user asks about chords, give a helpful answer
+        elif "chord progression" in user_message_lower or "chords" in user_message_lower or "suggest chords" in user_message_lower:
             import re
             genre = None
             mood = None
-            genre_match = re.search(r"(pop|rock|jazz|edm|hip hop|trap|house|metal|country|blues|folk)", user_message)
+            genre_match = re.search(r"(pop|rock|jazz|edm|hip hop|trap|house|metal|country|blues|folk)", user_message_lower)
             if genre_match:
                 genre = genre_match.group(1).title()
-            mood_match = re.search(r"(happy|sad|moody|dark|bright|uplifting|chill|energetic|romantic|melancholy)", user_message)
+            mood_match = re.search(r"(happy|sad|moody|dark|bright|uplifting|chill|energetic|romantic|melancholy)", user_message_lower)
             if mood_match:
                 mood = mood_match.group(1).title()
             progression = ai.suggest_chord_progression(genre or "Pop", mood or "Happy")
             ai_reply = f"Here’s a {genre or 'Pop'} {mood or 'Happy'} chord progression you can try, {user_name}: {' - '.join(progression)}. Want more options or a different style? Just ask!"
-        elif "mix" in user_message:
-            ai_reply = ai.suggest_plugin("mix") + f" Mixing can be a vibe—start with levels, then add a touch of EQ or compression if you feel like it, {user_name}. If you want a walkthrough, just ask."
-        elif "master" in user_message:
-            ai_reply = ai.suggest_plugin("loudness") + f" Mastering? Keep it chill: a limiter and a quick A/B with your favorite tracks goes a long way, {user_name}. More details if you want them, just say the word."
-        elif any(word in user_message for word in ["button by button", "step by step", "walkthrough"]):
-            daw = user_daw or ""
-            task = ""
-            for t in ["add track", "export", "mix", "record", "plugin", "midi", "audio", "save", "render"]:
-                if t in user_message:
-                    task = t
-                    break
-            if daw and task:
-                ai_reply = ai.button_by_button_instructions(daw, task)
-            else:
-                ai_reply = f"Happy to help, {user_name}! Please tell me your DAW (e.g., Ableton, FL Studio, Logic, etc.) and exactly what you want to do, and I’ll give you button-by-button instructions."
-        elif user_skill_level == "beginner":
-            ai_reply = f"If you ever want a step-by-step guide for anything in your DAW, just ask, {user_name}! I’m here to make things easy."
-        else:
-            ai_reply = f"Hey {user_name}, I’m just hanging out in the background. If you want advice or feedback, just ask—no pressure!"
+        @app.websocket("/ws/chat")
+        async def websocket_chat(websocket: WebSocket):
+            await websocket.accept()
+            context = []
+            user_skill_level = None
+            user_name = None
+            asked_name = False
+            persona = os.environ.get("AI_PERSONA", "You are a friendly, creative, supportive music production assistant.")
+            openai_api_key = os.environ.get("OPENAI_API_KEY")
+            if not openai_api_key:
+                await websocket.send_text("[Error] No OpenAI API key set on server.")
+                return
+            openai.api_key = openai_api_key
+            while True:
+                data = await websocket.receive_text()
+                chat_messages.append(data)
+                context.append({"user": data})
+                user_message = data.strip()
+                user_message_lower = user_message.lower()
 
-        # --- Maintain context (last 10 exchanges) ---
-        if len(context) > 20:
-            context = context[-20:]
-        context.append({"ai": ai_reply})
-        await websocket.send_text(ai_reply)
+                # Name detection (same as before)
+                if user_name is None:
+                    import re
+                    name_patterns = [
+                        r"my name is ([a-zA-Z0-9_\- ]+)",
+                        r"i'?m ([a-zA-Z0-9_\- ]+)",
+                        r"call me ([a-zA-Z0-9_\- ]+)",
+                        r"it'?s ([a-zA-Z0-9_\- ]+)",
+                        r"you can call me ([a-zA-Z0-9_\- ]+)",
+                        r"name[:]? ([a-zA-Z0-9_\- ]+)"
+                    ]
+                    found_name = None
+                    for pat in name_patterns:
+                        match = re.search(pat, user_message_lower)
+                        if match:
+                            found_name = match.group(1).strip().title()
+                            break
+                    if not found_name and len(user_message.split()) == 1 and user_message.isalpha():
+                        found_name = user_message.strip().title()
+                    if found_name:
+                        user_name = found_name
+                        asked_name = False
+                    elif not asked_name:
+                        ai_reply = "Hey! Before we get started, what should I call you?"
+                        context.append({"ai": ai_reply})
+                        await websocket.send_text(ai_reply)
+                        asked_name = True
+                        continue
 
-
-# --- TTS: Text-to-Speech ---
-from fastapi.responses import StreamingResponse
-import io
-
-@app.post("/tts")
-async def tts(request: Request):
-    data = await request.json()
-    text = data.get("text")
-    voice = data.get("voice", "default")
-    audio_data = ai.text_to_speech(text, voice)
-    return StreamingResponse(io.BytesIO(audio_data), media_type="audio/wav")
-
-# --- STT: Speech-to-Text ---
-@app.post("/stt")
-async def stt(file: UploadFile = File(...), language: str = "en"):
-    audio_data = await file.read()
-    text = ai.speech_to_text(audio_data, language)
-    return {"text": text}
-
-@app.post("/upload-file")
-async def upload_file(file: UploadFile = File(...)):
-    # Save file to disk or cloud storage
-    import os
-    content = await file.read()
-    filename = file.filename
-    os.makedirs("uploads", exist_ok=True)
-    with open(f"uploads/{filename}", "wb") as f:
-        f.write(content)
-    # AI instant feedback (audio or text)
-    feedback = None
-    if filename.lower().endswith(('.wav', '.mp3', '.flac', '.ogg')):
-        feedback = ai.analyze_audio(content) or "Upload received! (Audio analysis coming soon.)"
-    elif filename.lower().endswith(('.txt', '.lyric', '.lyrics')):
-        feedback = ai.generate_lyrics(audio_data=content) or "Upload received! (Lyric analysis coming soon.)"
-    else:
-        feedback = "Upload received! (Unsupported file type for instant feedback.)"
-    # Track upload in current session
-    try:
-        current_session["uploads"] += 1
-    except Exception:
-        pass
-    return {"filename": filename, "status": "uploaded", "feedback": feedback}
-
-@app.post("/setup")
-async def setup(request: Request):
-    global user_daw, user_daw_version, daw_adapter, api_key, user_name, reminder_enabled, reminder_interval, session_goal, favorite_genre
-    data = await request.json()
-    name = data.get("name")
-    daw = data.get("daw")
-    daw_version = data.get("daw_version")
-    api_key = data.get("api_key")
-    reminder = data.get("reminder_enabled")
-    interval = data.get("reminder_interval")
-    goal = data.get("session_goal")
-    fav_genres = data.get("favorite_genres")
-    if name:
-        user_name = name
-    user_daw = daw
-    user_daw_version = daw_version
-    if reminder is not None:
-        reminder_enabled = bool(reminder)
-    if interval is not None:
-        try:
-            reminder_interval = int(interval)
-        except Exception:
-            reminder_interval = 15
-    if goal is not None:
-        session_goal = goal
-    if fav_genres is not None:
-        if isinstance(fav_genres, list):
-            favorite_genres.clear()
-            favorite_genres.extend(fav_genres)
-        elif isinstance(fav_genres, str):
+                # Compose chat history for GPT
+                chat_history = []
+                chat_history.append({"role": "system", "content": persona})
+                if user_name:
+                    chat_history.append({"role": "system", "content": f"The user's name is {user_name}."})
+                for turn in context[-10:]:
+                    if "user" in turn:
+                        chat_history.append({"role": "user", "content": turn["user"]})
+                    if "ai" in turn:
+                        chat_history.append({"role": "assistant", "content": turn["ai"]})
+                # Call OpenAI API
+                try:
+                    completion = openai.chat.completions.create(
+                        model="gpt-3.5-turbo",
+                        messages=chat_history,
+                        temperature=0.8,
+                        max_tokens=200
+                    )
+                    ai_reply = completion.choices[0].message.content.strip()
+                except Exception as e:
+                    ai_reply = f"[Error] AI backend error: {e}"
+                context.append({"ai": ai_reply})
+                await websocket.send_text(ai_reply)
             favorite_genres.clear()
             favorite_genres.extend([g.strip() for g in fav_genres.split(",") if g.strip()])
     if daw and daw != "Other":
