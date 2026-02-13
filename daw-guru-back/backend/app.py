@@ -1,3 +1,14 @@
+from fastapi import Body
+# Store persona and user_name globally for session
+persona = os.environ.get("AI_PERSONA", "You are a friendly, creative, supportive music production assistant.")
+user_name = None
+# --- Setup endpoint for persona and user_name ---
+@app.post("/setup")
+async def setup_user(data: dict = Body(...)):
+    global persona, user_name
+    persona = data.get("persona", persona)
+    user_name = data.get("user_name", user_name)
+    return {"status": "ok", "persona": persona, "user_name": user_name}
 import os
 import openai
 
@@ -233,9 +244,20 @@ async def websocket_chat(websocket: WebSocket):
             openai.api_key = openai_api_key
             while True:
                 data = await websocket.receive_text()
-                chat_messages.append(data)
-                context.append({"user": data})
-                user_message = data.strip()
+                import json
+                try:
+                    payload = json.loads(data)
+                    user_message = payload.get("message", "").strip()
+                    incoming_user_name = payload.get("user_name")
+                    incoming_persona = payload.get("persona")
+                    if incoming_user_name:
+                        user_name = incoming_user_name
+                    if incoming_persona:
+                        persona = incoming_persona
+                except Exception:
+                    user_message = data.strip()
+                chat_messages.append(user_message)
+                context.append({"user": user_message})
                 user_message_lower = user_message.lower()
 
                 # Name detection (same as before)
