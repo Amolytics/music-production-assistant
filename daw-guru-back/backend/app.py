@@ -1,3 +1,4 @@
+from __future__ import annotations
 from fastapi import Depends
 from fastapi.security import APIKeyHeader
 
@@ -8,8 +9,6 @@ api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
 def verify_api_key(key: str = Depends(api_key_header)):
     if key != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key")
-
-from __future__ import annotations
 
 import os
 from typing import Optional, Dict, List
