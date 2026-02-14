@@ -1,382 +1,270 @@
+from fastapi import Depends
+from fastapi.security import APIKeyHeader
+
+# API key authentication
+API_KEY = os.environ.get("DAWGURU_API_KEY", "changeme")
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
+
+def verify_api_key(key: str = Depends(api_key_header)):
+    if key != API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+
+from __future__ import annotations
 
 import os
-import openai
-from fastapi import FastAPI, WebSocket, UploadFile, File, Request, Body
-from fastapi.responses import FileResponse
+from typing import Optional, Dict, List
+
+from fastapi import FastAPI, WebSocket, UploadFile, File, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
+from pydantic import BaseModel, Field
+
 from ai_services.models.music import AIMusicModel
 from daw_adapter import DAWAdapter
 
-
-import sys
-import asyncio
-sys.path.append("./routes")
-from routes.tutorials import router as tutorials_router
-
-app = FastAPI()
-
-# Store persona and user_name globally for session
-persona = os.environ.get("AI_PERSONA", "You are a friendly, creative, supportive music production assistant.")
-user_name = None
-
-# --- Setup endpoint for persona and user_name ---
-@app.post("/setup")
-async def setup_user(data: dict = Body(...)):
-    global persona, user_name
-    persona = data.get("persona", persona)
-    user_name = data.get("user_name", user_name)
-    return {"status": "ok", "persona": persona, "user_name": user_name}
-
-active_connections = set()
-
-@app.websocket("/ws/collab")
-async def websocket_collab(websocket: WebSocket):
-    await websocket.accept()
-    active_connections.add(websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            # Broadcast received message to all other connections
-            for conn in active_connections:
-                if conn != websocket:
-                    await conn.send_text(data)
-    except Exception:
-        pass
-    finally:
-        active_connections.remove(websocket)
-
-import time
-session_history = []
-current_session = {"goal": None, "progress": None, "start_time": None, "end_time": None, "uploads": 0, "reminders": 0}
-analytics = {"total_sessions": 0, "total_time": 0, "total_uploads": 0, "total_reminders": 0, "goals_completed": 0}
-
-@app.get("/session-info")
-def get_session_info():
-    last_summary = session_history[-1]["progress"] if session_history else ""
-    return {"current_goal": current_session["goal"], "last_summary": last_summary}
-
-@app.get("/analytics")
-def get_analytics():
-    return analytics
-
-@app.post("/session-start")
-def start_session():
-    global current_session
-    current_session = {"goal": session_goal, "progress": None, "start_time": time.time(), "end_time": None, "uploads": 0, "reminders": 0}
-    return {"status": "started", "goal": current_session["goal"]}
-
-@app.post("/session-end")
-async def end_session(request: Request):
-    global current_session, session_history, session_goal, analytics
-    data = await request.json()
-    progress = data.get("progress", "")
-    current_session["end_time"] = time.time()
-    session_time = (current_session["end_time"] or 0) - (current_session["start_time"] or 0)
-    analytics["total_sessions"] += 1
-    analytics["total_time"] += max(0, session_time)
-    analytics["total_uploads"] += current_session.get("uploads", 0)
-    analytics["total_reminders"] += current_session.get("reminders", 0)
-    if progress.strip():
-        analytics["goals_completed"] += 1
-    session_history.append({"goal": current_session["goal"], "progress": progress, "duration": session_time, "uploads": current_session.get("uploads", 0)})
-    session_goal = None
-    current_session = {"goal": None, "progress": None, "start_time": None, "end_time": None, "uploads": 0, "reminders": 0}
-    return {"status": "ended", "summary": progress}
-# --- DAW Workflow Update Endpoint ---
-workflow_state = {}
-
-@app.post("/workflow-update")
-async def workflow_update(request: Request):
-    global workflow_state
-    data = await request.json()
-    workflow_state = data
-    return {"status": "received", "workflow_state": workflow_state}
-
-from fastapi import FastAPI, WebSocket, UploadFile, File, Request
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-from typing import List
-from ai_services.models.music import AIMusicModel
-from daw_adapter import DAWAdapter
-import sys
-sys.path.append("./routes")
- 
-
-
-
-# Use the single app instance from the top
-app.include_router(tutorials_router)
-
-# Add root route for health check and frontend requests
-@app.get("/")
-def read_root():
-    return {"status": "ok"}
-
-# Serve favicon.ico
-@app.get("/favicon.ico")
-def favicon():
-    return FileResponse("favicon.ico")
+# -----------------------------------------------------------------------------
+# FastAPI app
+# -----------------------------------------------------------------------------
+app = FastAPI(title="DAW Guru Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[os.environ.get("FRONTEND_ORIGIN", "*")],  # tighten this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-user_daw = None
-user_daw_version = None
-user_name = None
-reminder_enabled = True
-reminder_interval = 15  # minutes
-session_goal = None
-favorite_genres = []
-ai = AIMusicModel()
-daw_adapter = None
-# chat_messages is an in-memory store for demo purposes.
-# For production, use persistent storage (database, Redis, etc.) for chat and file uploads.
-chat_messages = []
+UPLOAD_DIR = os.environ.get("DAWGURU_UPLOAD_DIR", "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# --- Real-time collaboration chat and file sharing ---
+# Store user DAW selection (simple in-memory; for production use DB/session)
+user_daw: Optional[str] = None
+user_daw_version: Optional[str] = None
+daw_adapter: Optional[DAWAdapter] = None
 
-# --- AI Teacher/Producer Chat ---
+# AI: defaults to Ollama local (no key needed)
+ai = AIMusicModel(
+    provider=os.environ.get("DAWGURU_PROVIDER", "ollama"),
+    ollama_host=os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434"),
+    ollama_model=os.environ.get("OLLAMA_MODEL", "llama3.1"),
+    openai_model=os.environ.get("OPENAI_MODEL", "gpt-4.1-mini"),
+)
 
+# -----------------------------------------------------------------------------
+# Models
+# -----------------------------------------------------------------------------
+class SetupPayload(BaseModel):
+    name: Optional[str] = None
+    daw: Optional[str] = None
+    daw_version: Optional[str] = None
+    api_key: Optional[str] = None  # if provided => switch to OpenAI
+
+
+class ChatPayload(BaseModel):
+    message: str = Field(..., min_length=1, max_length=4000)
+    history: Optional[List[Dict[str, str]]] = None  # [{"role":"user/assistant","content":"..."}]
+
+
+# -----------------------------------------------------------------------------
+# Health
+# -----------------------------------------------------------------------------
+@app.get("/health")
+async def health():
+    return {
+        "status": "ok",
+        "provider": ai.provider,
+        "ollama_host": ai.ollama_host,
+        "ollama_model": ai.ollama_model,
+        "openai_model": ai.openai_model,
+    }
+
+
+# -----------------------------------------------------------------------------
+# WebSocket chat (NOW REAL AI, not echo)
+# -----------------------------------------------------------------------------
 @app.websocket("/ws/chat")
 async def websocket_chat(websocket: WebSocket):
     await websocket.accept()
-    context = []
-    user_skill_level = None
-    user_name = None
-    asked_name = False
-    while True:
-        data = await websocket.receive_text()
-        chat_messages.append(data)
-        context.append({"user": data})
-        user_message = data.strip()
-        user_message_lower = user_message.lower()
 
-        # --- Name Detection (free-form) ---
-        if user_name is None:
-            import re
-            # Accept a variety of name introductions and also single-word replies
-            name_patterns = [
-                r"my name is ([a-zA-Z0-9_\- ]+)",
-                r"i'?m ([a-zA-Z0-9_\- ]+)",
-                r"call me ([a-zA-Z0-9_\- ]+)",
-                r"it'?s ([a-zA-Z0-9_\- ]+)",
-                r"you can call me ([a-zA-Z0-9_\- ]+)",
-                r"name[:]? ([a-zA-Z0-9_\- ]+)"
-            ]
-            found_name = None
-            for pat in name_patterns:
-                match = re.search(pat, user_message_lower)
-                if match:
-                    found_name = match.group(1).strip().title()
-                    break
-            # If user just replies with a single word (likely their name), accept it
-            if not found_name and len(user_message.split()) == 1 and user_message.isalpha():
-                found_name = user_message.strip().title()
-            if found_name:
-                user_name = found_name
-                asked_name = False
-            elif not asked_name:
-                ai_reply = "Hey! Before we get started, what should I call you?"
-                context.append({"ai": ai_reply})
-                await websocket.send_text(ai_reply)
-                asked_name = True
+    convo: List[Dict[str, str]] = [
+        {
+            "role": "system",
+            "content": (
+                "You are DAW Guru, a practical music production assistant. "
+                "Be concise, actionable, and DAW-friendly. Ask 1 short question "
+                "only when truly needed."
+            ),
+        }
+    ]
+
+    try:
+        while True:
+            user_text = await websocket.receive_text()
+            user_text = (user_text or "").strip()
+
+            if not user_text:
+                await websocket.send_text("Say something and I’ll help.")
                 continue
 
-        # --- Skill Level Detection (simple heuristic) ---
-        if any(word in user_message for word in ["just started", "beginner", "first time", "new to", "not sure how", "what does this do"]):
-            user_skill_level = "beginner"
-        elif any(word in user_message for word in ["advanced", "pro", "been using", "years", "expert", "workflow", "template"]):
-            user_skill_level = "advanced"
-        elif user_skill_level is None:
-            user_skill_level = "intermediate"
+            if len(user_text) > 4000:
+                await websocket.send_text("That message is too long (max 4000 chars).")
+                continue
 
-        # --- Conversational, open-ended AI ---
-        import random
-        # Greeting detection
-        greetings = ["hi", "hello", "hey", "yo", "hiya", "greetings", "good morning", "good afternoon", "good evening"]
-        if any(greet in user_message_lower for greet in greetings):
-            greet_responses = [
-                f"Hey {user_name}! How's your music going today?",
-                f"Hello {user_name}! Ready to make some tunes?",
-                f"Hi {user_name}! What are you working on?",
-                f"Yo {user_name}! Need any inspiration or just want to chat?"
-            ]
-            ai_reply = random.choice(greet_responses)
-        # If the user asks about a drum roll, give a helpful answer
-        elif 'drum roll' in user_message_lower or 'drom roll' in user_message_lower:
-            ai_reply = (
-                f"To make a drum roll, {user_name}, try this: \n"
-                "1. Add a snare or percussion sample to a new MIDI or audio track.\n"
-                "2. Draw or record a series of fast, evenly spaced notes (16th or 32nd notes work well).\n"
-                "3. Gradually increase the note velocity or volume for a rising effect.\n"
-                "4. Optionally, automate pitch or add reverb for drama!\n"
-                "Let me know your DAW for step-by-step details."
-            )
-        # If the user asks about chords, give a helpful answer
-        elif "chord progression" in user_message_lower or "chords" in user_message_lower or "suggest chords" in user_message_lower:
-            import re
-            genre = None
-            mood = None
-            genre_match = re.search(r"(pop|rock|jazz|edm|hip hop|trap|house|metal|country|blues|folk)", user_message_lower)
-            if genre_match:
-                genre = genre_match.group(1).title()
-            mood_match = re.search(r"(happy|sad|moody|dark|bright|uplifting|chill|energetic|romantic|melancholy)", user_message_lower)
-            if mood_match:
-                mood = mood_match.group(1).title()
-            progression = ai.suggest_chord_progression(genre or "Pop", mood or "Happy")
-            ai_reply = f"Here’s a {genre or 'Pop'} {mood or 'Happy'} chord progression you can try, {user_name}: {' - '.join(progression)}. Want more options or a different style? Just ask!"
-        @app.websocket("/ws/chat")
-        async def websocket_chat(websocket: WebSocket):
-            await websocket.accept()
-            context = []
-            user_skill_level = None
-            user_name = None
-            asked_name = False
-            persona = os.environ.get("AI_PERSONA", "You are a friendly, creative, supportive music production assistant.")
-            openai_api_key = os.environ.get("OPENAI_API_KEY")
-            if not openai_api_key:
-                await websocket.send_text("[Error] No OpenAI API key set on server.")
-                return
-            openai.api_key = openai_api_key
-            while True:
-                data = await websocket.receive_text()
-                import json
-                try:
-                    payload = json.loads(data)
-                    user_message = payload.get("message", "").strip()
-                    incoming_user_name = payload.get("user_name")
-                    incoming_persona = payload.get("persona")
-                    if incoming_user_name:
-                        user_name = incoming_user_name
-                    if incoming_persona:
-                        persona = incoming_persona
-                except Exception:
-                    user_message = data.strip()
-                chat_messages.append(user_message)
-                context.append({"user": user_message})
-                user_message_lower = user_message.lower()
+            convo.append({"role": "user", "content": user_text})
 
-                # Name detection (same as before)
-                if user_name is None:
-                    import re
-                    name_patterns = [
-                        r"my name is ([a-zA-Z0-9_\- ]+)",
-                        r"i'?m ([a-zA-Z0-9_\- ]+)",
-                        r"call me ([a-zA-Z0-9_\- ]+)",
-                        r"it'?s ([a-zA-Z0-9_\- ]+)",
-                        r"you can call me ([a-zA-Z0-9_\- ]+)",
-                        r"name[:]? ([a-zA-Z0-9_\- ]+)"
-                    ]
-                    found_name = None
-                    for pat in name_patterns:
-                        match = re.search(pat, user_message_lower)
-                        if match:
-                            found_name = match.group(1).strip().title()
-                            break
-                    if not found_name and len(user_message.split()) == 1 and user_message.isalpha():
-                        found_name = user_message.strip().title()
-                    if found_name:
-                        user_name = found_name
-                        asked_name = False
-                    elif not asked_name:
-                        ai_reply = "Hey! Before we get started, what should I call you?"
-                        context.append({"ai": ai_reply})
-                        await websocket.send_text(ai_reply)
-                        asked_name = True
-                        continue
+            try:
+                reply = await ai.chat_async(convo)
+            except Exception as e:
+                await websocket.send_text(f"AI error: {type(e).__name__}: {e}")
+                continue
 
-                # Compose chat history for GPT
-                chat_history = []
-                chat_history.append({"role": "system", "content": persona})
-                if user_name:
-                    chat_history.append({"role": "system", "content": f"The user's name is {user_name}."})
-                for turn in context[-10:]:
-                    if "user" in turn:
-                        chat_history.append({"role": "user", "content": turn["user"]})
-                    if "ai" in turn:
-                        chat_history.append({"role": "assistant", "content": turn["ai"]})
-                # Call OpenAI API
-                try:
-                    completion = openai.chat.completions.create(
-                        model="gpt-3.5-turbo",
-                        messages=chat_history,
-                        temperature=0.8,
-                        max_tokens=200
-                    )
-                    ai_reply = completion.choices[0].message.content.strip()
-                except Exception as e:
-                    ai_reply = f"[Error] AI backend error: {e}"
-                context.append({"ai": ai_reply})
-                await websocket.send_text(ai_reply)
-            favorite_genres.clear()
-            favorite_genres.extend([g.strip() for g in fav_genres.split(",") if g.strip()])
-    if daw and daw != "Other":
-        daw_adapter = DAWAdapter(daw, daw_version)
-        daw_adapter.connect()
+            convo.append({"role": "assistant", "content": reply})
+            await websocket.send_text(reply)
+
+    except Exception:
+        return
+
+
+# -----------------------------------------------------------------------------
+# REST chat (easy to test)
+# -----------------------------------------------------------------------------
+@app.post("/chat")
+async def chat(payload: ChatPayload, key: str = Depends(verify_api_key)):
+    msg = payload.message.strip()
+    if not msg:
+        raise HTTPException(status_code=400, detail="message is required")
+
+    base = [
+        {
+            "role": "system",
+            "content": (
+                "You are DAW Guru, a practical music production assistant. "
+                "Be concise, actionable, and DAW-friendly."
+            ),
+        }
+    ]
+
+    history = payload.history or []
+    trimmed: List[Dict[str, str]] = []
+    for item in history[-20:]:
+        r = (item.get("role") or "").strip()
+        c = (item.get("content") or "").strip()
+        if r in ("user", "assistant") and c:
+            trimmed.append({"role": r, "content": c})
+
+    convo = base + trimmed + [{"role": "user", "content": msg}]
+
+    try:
+        reply = await ai.chat_async(convo)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
+
+    return {"reply": reply}
+
+
+# -----------------------------------------------------------------------------
+# Uploads
+# -----------------------------------------------------------------------------
+@app.post("/upload-file")
+async def upload_file(file: UploadFile = File(...), key: str = Depends(verify_api_key)):
+    MAX_BYTES = 20 * 1024 * 1024  # 20MB
+    content = await file.read()
+    if len(content) > MAX_BYTES:
+        raise HTTPException(status_code=413, detail="File too large (max 20MB).")
+
+    filename = file.filename or "upload.bin"
+    safe_name = filename.replace("\\", "_").replace("/", "_").strip()
+    path = os.path.join(UPLOAD_DIR, safe_name)
+
+    with open(path, "wb") as f:
+        f.write(content)
+
+    return {"filename": safe_name, "status": "uploaded", "path": path}
+
+
+# -----------------------------------------------------------------------------
+# Setup
+# -----------------------------------------------------------------------------
+@app.post("/setup")
+async def setup(payload: SetupPayload, key: str = Depends(verify_api_key)):
+    global user_daw, user_daw_version, daw_adapter
+
+    user_daw = payload.daw
+    user_daw_version = payload.daw_version
+
+    if payload.api_key:
+        ai.set_openai_key(payload.api_key)
+        ai.provider = "openai"
+
+    if user_daw and user_daw != "Other":
+        daw_adapter = DAWAdapter(user_daw, user_daw_version)
+        try:
+            daw_adapter.connect()
+        except Exception:
+            daw_adapter = None
     else:
         daw_adapter = None
-    status = "setup complete"
-    if api_key:
-        status += " (API key saved)"
-    return {"status": status, "daw": daw, "daw_version": daw_version, "api_key": api_key, "name": user_name, "reminder_enabled": reminder_enabled, "reminder_interval": reminder_interval, "session_goal": session_goal, "favorite_genres": favorite_genres}
 
-@app.get("/user-info")
-def get_user_info():
-    return {"name": user_name, "daw": user_daw, "daw_version": user_daw_version, "reminder_enabled": reminder_enabled, "reminder_interval": reminder_interval, "session_goal": session_goal, "favorite_genres": favorite_genres}
+    return {
+        "status": "setup complete",
+        "daw": user_daw,
+        "daw_version": user_daw_version,
+        "provider": ai.provider,
+    }
+
+
+# -----------------------------------------------------------------------------
+# Existing endpoints preserved
+# -----------------------------------------------------------------------------
 @app.post("/generate-lyrics")
-def generate_lyrics(style: str, emotion: str, language: str, vocal_type: str, ethnicity: str, genre: str, topic: str, output_type: str, song_file: UploadFile = File(None)):
-    # Use DAW adapter if available
-    if daw_adapter:
-        project_info = daw_adapter.get_project_info()
-    if output_type == "lyrics":
-        return {"lyrics": ai.generate_lyrics(style=style, topic=topic)}
-    else:
-        # Placeholder: handle song_file and generate sung vocals
-        lyrics = ai.generate_lyrics(style=style, topic=topic)
-        sung_audio = ai.generate_sung_lyrics(lyrics, emotion=emotion, ethnicity=ethnicity, language=language, style=style, voice=vocal_type)
-        return {"lyrics": lyrics, "audio": "SUNG_AUDIO_PLACEHOLDER"}
+async def generate_lyrics(request: Request, key: str = Depends(verify_api_key)):
+    data = await request.json()
+    style = data.get("style", "pop")
+    topic = data.get("topic", "love")
+    emotion = data.get("emotion", None)
+    language = data.get("language", "en")
+    vocal_type = data.get("vocal_type", "default")
+
+    lyrics = await ai.generate_lyrics_async(style=style, topic=topic, emotion=emotion, language=language)
+    return {"lyrics": lyrics, "voice": vocal_type, "style": style}
+
 
 @app.get("/chord-progression")
-def chord_progression(genre: str = "Pop", mood: str = "Happy"):
-    return {"progression": ai.suggest_chord_progression(genre, mood)}
+async def chord_progression(genre: str = "Pop", mood: str = "Happy", key: str = Depends(verify_api_key)):
+    prog = await ai.suggest_chord_progression_async(genre=genre, mood=mood)
+    return {"progression": prog}
+
 
 @app.get("/search-sample")
-def search_sample(description: str, genre: str = None):
-    return {"sample_url": ai.search_free_sample(description, genre)}
+async def search_sample(description: str, genre: str = None, key: str = Depends(verify_api_key)):
+    result = await ai.search_free_sample_async(description, genre)
+    return {"result": result}
 
-# Add more endpoints as needed for TTS, STT, plugin scan, etc.
 
-
-# Plugin management endpoints
 plugins_list = ["EQ", "Compressor", "Reverb", "Delay", "Synth", "Limiter"]
 
+
 @app.get("/scan-plugins")
-def scan_plugins():
+async def scan_plugins(key: str = Depends(verify_api_key)):
     return {"plugins": plugins_list}
 
+
 @app.post("/add-plugin")
-async def add_plugin(request: Request):
+async def add_plugin(request: Request, key: str = Depends(verify_api_key)):
     data = await request.json()
-    name = data.get("name")
+    name = (data.get("name") or "").strip()
     if name and name not in plugins_list:
         plugins_list.append(name)
     return {"plugins": plugins_list}
 
-# DAW-agnostic endpoint to send sample to DAW
+
 @app.post("/send-to-daw")
-async def send_to_daw(request: Request):
-    global daw_adapter
+async def send_to_daw(request: Request, key: str = Depends(verify_api_key)):
     data = await request.json()
     sample_url = data.get("sample_url")
+
     if daw_adapter:
-        # DAW-agnostic: perform action for any DAW
         result = daw_adapter.perform_action("add_sample", {"url": sample_url})
         return {"status": "sent", "daw": daw_adapter.daw_name, "result": result}
-    else:
-        return {"status": "no DAW connected", "sample_url": sample_url}
+
+    return {"status": "no DAW connected", "sample_url": sample_url}

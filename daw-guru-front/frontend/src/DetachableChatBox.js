@@ -1,20 +1,19 @@
-
 import React, { useState } from 'react';
-import DragDropFileUpload from './DragDropFileUpload.jsx';
+import { WS_BASE } from './lib/api';
+// WebSocket for real-time chat
+import DragDropFileUpload from './DragDropFileUpload';
 
-function DetachableChatBox({ visible, onClose, user }) {
+// ...existing code...
+
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [messages, setMessages] = useState([
-    { sender: 'AI', text: user && user.name ? `Welcome, ${user.name}! How can I help with your music today?` : 'Welcome! How can I help with your music today?' }
+    { sender: 'AI', text: 'Welcome! How can I help with your music today?' }
   ]);
   const [ws, setWs] = useState(null);
   React.useEffect(() => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
-    const wsHost = backendUrl.replace(/^https?:\/\//, '');
-    const socket = new window.WebSocket(`${wsProtocol}://${wsHost}/ws/chat`);
+    const socket = new window.WebSocket(`${WS_BASE}/ws/chat`);
     socket.onmessage = (event) => {
       setMessages(prev => [...prev, { sender: 'AI', text: event.data }]);
     };
@@ -59,8 +58,8 @@ function DetachableChatBox({ visible, onClose, user }) {
     setNotification(`File uploaded: ${file.name}`);
     const formData = new FormData();
     formData.append('file', file);
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    fetch(`${backendUrl}/upload-file`, {
+    import { fetchWithApiKey } from './lib/api';
+    fetchWithApiKey(`${WS_BASE.replace('ws://', 'http://').replace('wss://', 'https://')}/upload-file`, {
       method: 'POST',
       body: formData,
     })
@@ -118,13 +117,7 @@ function DetachableChatBox({ visible, onClose, user }) {
         e.preventDefault();
         setMessages([...messages, { sender: 'You', text: input }]);
         if (ws && ws.readyState === ws.OPEN) {
-          // Send JSON with message, user name, and persona
-          const payload = {
-            message: input,
-            user_name: user && user.name ? user.name : null,
-            persona: user && user.persona ? user.persona : null
-          };
-          ws.send(JSON.stringify(payload));
+          ws.send(input);
         }
         setInput('');
       }}>
@@ -139,6 +132,5 @@ function DetachableChatBox({ visible, onClose, user }) {
       </form>
     </div>
   );
-}
 
 export default DetachableChatBox;

@@ -14,9 +14,9 @@ function SetupPage({ onComplete }) {
       <form className="setup-form" onSubmit={handleSubmit}>
         <h2 className="setup-title">Setup Your Studio</h2>
         <label className="setup-label">Your Name</label>
-        <input className="setup-input" type="text" id="setup-name" name="name" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name" required />
+        <input className="setup-input" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name" required />
         <label className="setup-label">Select Your DAW</label>
-        <select className="setup-input" id="setup-daw" name="daw" value={daw} onChange={e => setDaw(e.target.value)}>
+        <select className="setup-input" value={daw} onChange={e => setDaw(e.target.value)}>
           <option value="Ableton">Ableton Live</option>
           <option value="FL Studio">FL Studio</option>
           <option value="Logic Pro">Logic Pro</option>
