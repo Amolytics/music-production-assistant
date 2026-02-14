@@ -1,4 +1,5 @@
 from __future__ import annotations
+import os
 from fastapi import Depends
 from fastapi.security import APIKeyHeader
 
@@ -10,7 +11,6 @@ def verify_api_key(key: str = Depends(api_key_header)):
     if key != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key")
 
-import os
 from typing import Optional, Dict, List
 
 from fastapi import FastAPI, WebSocket, UploadFile, File, Request, HTTPException
